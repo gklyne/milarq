@@ -6,6 +6,6 @@
 
 <#dataset> rdf:type tdb:DatasetTDB ;
     # file path is relative to eclipse workspace directory
-    tdb:location "/home/christopher/MILARQ-04-23a/sparqlite/webapp/WEB-INF/data/tdb/tolkien" ;
+    tdb:location "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/tdb/tolkien" ;
     .
 

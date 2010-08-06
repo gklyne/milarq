@@ -16,7 +16,7 @@
 
 <#rowling> rdf:type tdb:GraphTDB ;
     # file path is relative to eclipse workspace directory
-    tdb:location "google_sparqlite_0.4-claros/webapp/WEB-INF/data/tdb/rowling" ;
+    tdb:location "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/tdb/rowling" ;
     .
 
 <#tolkien> rdf:type ja:MemoryModel ;

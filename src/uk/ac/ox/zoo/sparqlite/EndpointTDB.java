@@ -189,7 +189,7 @@ public class EndpointTDB extends Endpoint {
 					log.trace("found TDB dataset");
 					storeDescRoot = list.nextResource();
 					getLarqIndex(storeDescRoot);
-					log.trace("assemble TDB dataset via TDB factory");
+					log.trace("assemble TDB dataset via TDB factory, using " + storeDescFilePath );
 					dataset = TDBFactory.assembleDataset(storeDescFilePath);
 					return dataset;
 				}

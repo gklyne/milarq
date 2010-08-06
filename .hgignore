@@ -1,3 +1,13 @@
 
 syntax: regexp
 ^build/classes$
+syntax: regexp
+^webapp/WEB-INF/data$
+syntax: regexp
+^webapp/WEB-INF/data/lucene$
+syntax: regexp
+^webapp/WEB-INF/data/lucene/allbooks$
+syntax: regexp
+^webapp/WEB-INF/data/lucene/rowling$
+syntax: regexp
+^webapp/WEB-INF/data/lucene/tolkien$
