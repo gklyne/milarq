@@ -1,0 +1,13 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix sparqlite: <http://purl.org/net/sparqlite/vocab#> .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+
+<#dataset> rdf:type tdb:DatasetTDB ;
+    # file path is relative to eclipse workspace directory
+    tdb:location "google_sparqlite_0.4-claros/webapp/WEB-INF/data/tdb/allbooks" ;
+    # file path is relative to eclipse workspace directory
+    sparqlite:larqLocation "google_sparqlite_0.4-claros/webapp/WEB-INF/data/lucene/allbooks" ;
+    .

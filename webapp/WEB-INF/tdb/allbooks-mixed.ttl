@@ -1,0 +1,25 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+
+# A dataset of one TDB-backed graph as the default graph and an in-memory graph as a named graph.
+<#dataset> rdf:type  ja:RDFDataset ;
+     ja:namedGraph
+        [ ja:graphName      <http://example.org/rowling> ;
+          ja:graph          <#rowling> ] ;
+     ja:namedGraph
+        [ ja:graphName      <http://example.org/tolkien> ;
+          ja:graph          <#tolkien> ] ;
+     . 
+
+<#rowling> rdf:type tdb:GraphTDB ;
+    # file path is relative to eclipse workspace directory
+    tdb:location "google_sparqlite_0.4-claros/webapp/WEB-INF/data/tdb/rowling" ;
+    .
+
+<#tolkien> rdf:type ja:MemoryModel ;
+    # here file URL is relative to location of assembler file
+    ja:content [ja:externalContent <file:../data/tolkien.ttl> ] ;
+    .
