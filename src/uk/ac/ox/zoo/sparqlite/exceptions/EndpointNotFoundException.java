@@ -1,4 +1,4 @@
-package uk.ac.ox.zoo.sparqlite;
+package uk.ac.ox.zoo.sparqlite.exceptions;
 
 public class EndpointNotFoundException extends Exception {
 

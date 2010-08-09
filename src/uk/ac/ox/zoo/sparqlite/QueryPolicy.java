@@ -4,6 +4,10 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import uk.ac.ox.zoo.sparqlite.exceptions.QueryPolicyException;
+import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;

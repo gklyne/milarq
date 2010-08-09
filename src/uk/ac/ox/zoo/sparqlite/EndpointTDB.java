@@ -12,6 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
+import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
+import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
+
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.Query;

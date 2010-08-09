@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ox.zoo.sparqlite;
+package uk.ac.ox.zoo.sparqlite.exceptions;
 
 /**
  * Represents anticipated exception arising during processing of request.

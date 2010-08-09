@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.servlet.ServletConfig;
 
 import uk.ac.ox.zoo.sparqlite.*;
+import uk.ac.ox.zoo.sparqlite.exceptions.QueryPolicyException;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;

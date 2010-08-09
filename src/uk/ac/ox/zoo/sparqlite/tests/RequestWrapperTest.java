@@ -10,6 +10,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 
 import uk.ac.ox.zoo.sparqlite.*;
+import uk.ac.ox.zoo.sparqlite.exceptions.MalformedRequestException;
+import uk.ac.ox.zoo.sparqlite.exceptions.NotImplementedException;
 
 import com.hp.hpl.jena.query.Query;
 
