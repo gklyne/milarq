@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.ac.ox.zoo.sparqlite.config.Config;
+
 
 /**
  * A partial implementation of the SPARQL protocol, for use with Jena TDB.
@@ -44,7 +46,8 @@ import org.apache.commons.logging.LogFactory;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Endpoint endpoint = new EndpointTDB(request, getServletContext());
+	    Config c = Config.getNamedConfig( "sparqlite" );
+		Endpoint endpoint = new EndpointTDB( c, request, getServletContext());
 		doCommon(request, response, endpoint); // superclass
 	}  	  	  	  
 

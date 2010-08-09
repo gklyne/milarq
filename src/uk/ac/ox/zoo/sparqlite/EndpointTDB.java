@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
+import uk.ac.ox.zoo.sparqlite.config.Config;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
@@ -40,17 +41,20 @@ public class EndpointTDB extends Endpoint {
 	IndexLARQ index = null;
 	boolean lookedForIndex = false;
 	
+	final Config config;
+	
 	static {
 		// required to make the generic dataset assembler work with tdb (0.7) graphs
 		AssemblerUtils.init();
 	}
-	
-	EndpointTDB() {
-		
-	}
-	
-	public EndpointTDB(HttpServletRequest request, ServletContext context) {
+
+    public EndpointTDB(HttpServletRequest request, ServletContext context) {
+        this( Config.neutral, request, context );
+    }
+    
+	public EndpointTDB(Config config, HttpServletRequest request, ServletContext context) {
 		// convention for mapping request path to store description file path
+	    this.config = config;
 		this.pathInfo = request.getPathInfo();
 		this.storeDescFilePath = context.getRealPath("WEB-INF/tdb"+pathInfo+".ttl");
 		init();
@@ -58,6 +62,7 @@ public class EndpointTDB extends Endpoint {
 	
 	public EndpointTDB(String storeDescFilePath) {
 		this.storeDescFilePath = storeDescFilePath;
+		this.config = Config.fake(storeDescFilePath);
 		init();
 	}
 

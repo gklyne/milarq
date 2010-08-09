@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import uk.ac.ox.zoo.sparqlite.config.Config;
+
 
 /**
  * HEALTH WARNING: this processor is inherently unsafe and may deliver unpredictable results
@@ -49,7 +51,7 @@ import org.apache.commons.logging.LogFactory;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Endpoint endpoint = new EndpointTDB(request, getServletContext());
+		Endpoint endpoint = new EndpointTDB(Config.neutral, request, getServletContext());
 		doCommon(request, response, endpoint); // superclass
 	}  	  	  	 
 	
