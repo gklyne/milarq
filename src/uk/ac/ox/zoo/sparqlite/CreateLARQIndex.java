@@ -77,7 +77,6 @@ public class CreateLARQIndex
         System.exit(0);        
         }
 
-	@SuppressWarnings("unchecked")
 	public static void createIndex(String tdbdir, String stringindexdir, String subjectindexdir)
 		{
 		log.info("open TDB dataset");

@@ -24,8 +24,7 @@ public class YearSortingString extends FunctionBase1 {
 	 * comparing year values which may be earlier than 1AD.
 	 * (Add 10000 to year and format as 5-digit number)
 	 */
-	@Override
-	public NodeValue exec(NodeValue v) {
+	@Override public NodeValue exec(NodeValue v) {
         Node n = v.asNode() ;
         if ( ! n.isLiteral() )
             throw new ExprEvalException("Not a Literal: "+FmtUtils.stringForNode(n)) ;

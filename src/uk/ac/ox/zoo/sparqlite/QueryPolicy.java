@@ -140,15 +140,14 @@ public class QueryPolicy {
 	class VariablePredicateFinder implements ElementVisitor {
 		boolean foundVariablePredicate = false;
 		
-		@SuppressWarnings("unchecked")
 		public void visit(ElementTriplesBlock arg0) {
 			// TODO Auto-generated method stub
 			log.trace("ElementTriplesBlock: "+arg0.toString());
 			BasicPattern pattern = arg0.getPattern();
 			log.trace("pattern of ElementTriplesBlock: "+pattern.toString());
-			Iterator it = arg0.patternElts();
+			Iterator<Triple> it = arg0.patternElts();
 			while (it.hasNext()) {
-				Object ob = it.next();
+				Triple ob = it.next();
 				log.trace("pattern element of ElementTriplesBlock: "+ob.getClass());
 				log.trace(ob.toString());
 				if (ob instanceof Triple) {
@@ -257,7 +256,6 @@ public class QueryPolicy {
 	class FilterFinder implements ElementVisitor {
 		boolean foundFilter = false;
 		
-		@SuppressWarnings("unchecked")
 		public void visit(ElementTriplesBlock arg0) {
 			log.trace("ElementTriplesBlock: "+arg0.toString());
 		}

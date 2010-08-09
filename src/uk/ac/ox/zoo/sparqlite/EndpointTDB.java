@@ -2,7 +2,6 @@ package uk.ac.ox.zoo.sparqlite;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -123,9 +122,7 @@ public class EndpointTDB extends Endpoint {
 		return index;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	void close() throws UnexpectedException {
+	@Override void close() throws UnexpectedException {
 		if (index != null) {
 			try {
 				log.trace("close larq index");
