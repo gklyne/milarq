@@ -13,6 +13,17 @@
 		N.B. this version of SPARQLite is designed to work with Jena TDB 0.7.1.
 	-->
 	
+    <servlet>
+       <display-name>sparqlite initialisation</display-name>
+       <servlet-name>Sparqlite Init</servlet-name>
+       <servlet-class>uk.ac.ox.zoo.sparqlite.config.Init</servlet-class>
+       <init-param>
+            <param-name>uk.ac.ox.zoo.sparqlite.config</param-name>
+            <param-value>sparqlite-assembly.ttl</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+	
 	<servlet>
 		<description>SPARQLite TDB servlet with strict query policy</description>
 		<display-name>SPARQLite ServletTDB (strict policy) </display-name>
