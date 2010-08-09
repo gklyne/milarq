@@ -289,7 +289,6 @@ public class RequestWrapperTest extends TestCase {
 
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testNewInstanceFromGetRequest() {
 		try {
 			
@@ -297,20 +296,20 @@ public class RequestWrapperTest extends TestCase {
 			HttpServletRequest request = createMock(HttpServletRequest.class);
 
 			String queryString = "ASK { ?s ?p ?o }";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
-			Vector headerNamesV = new Vector();
+			Vector<String> headerNamesV = new Vector<String>();
 			headerNamesV.add("Host");
-			Vector hostV = new Vector();
+			Vector<String> hostV = new Vector<String>();
 			hostV.add("localhost");
-			Enumeration host = hostV.elements();
+			Enumeration<String> host = hostV.elements();
 			headerNamesV.add("User-agent");
-			Vector uaV = new Vector();
+			Vector<String> uaV = new Vector<String>();
 			uaV.add("sparqlite-tester");
-			Enumeration ua = uaV.elements();
-			Enumeration headerNames = headerNamesV.elements();
+			Enumeration<String> ua = uaV.elements();
+			Enumeration<String> headerNames = headerNamesV.elements();
 			
 			// set up expected sequence of calls on request 
 	
@@ -347,7 +346,6 @@ public class RequestWrapperTest extends TestCase {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testNewInstanceFromPostRequest() {
 		try {
 			
@@ -358,33 +356,33 @@ public class RequestWrapperTest extends TestCase {
 			String encodedQuery = URLEncoder.encode(queryString, "UTF-8");
 			String content = "query="+encodedQuery+"&someotherstuff";
 			int contentLength = content.length();
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
-			Vector headerNamesV = new Vector();
+			Vector<String> headerNamesV = new Vector<String>();
 
 			headerNamesV.add("Host");
-			Vector hostV = new Vector();
+			Vector<String> hostV = new Vector<String>();
 			hostV.add("localhost");
-			Enumeration host = hostV.elements();
+			Enumeration<String> host = hostV.elements();
 
 			headerNamesV.add("User-agent");
-			Vector uaV = new Vector();
+			Vector<String> uaV = new Vector<String>();
 			uaV.add("sparqlite-tester");
-			Enumeration ua = uaV.elements();
+			Enumeration<String> ua = uaV.elements();
 
 			headerNamesV.add("Content-Type");
-			Vector ctV = new Vector();
+			Vector<String> ctV = new Vector<String>();
 			ctV.add("application/x-www-form-urlencoded; charset=UTF-8");
-			Enumeration ct = ctV.elements();
+			Enumeration<String> ct = ctV.elements();
 
 			headerNamesV.add("Content-Length");
-			Vector clV = new Vector();
+			Vector<String> clV = new Vector<String>();
 			clV.add(Integer.toString(contentLength));
-			Enumeration cl = clV.elements();
+			Enumeration<String> cl = clV.elements();
 
-			Enumeration headerNames = headerNamesV.elements();
+			Enumeration<String> headerNames = headerNamesV.elements();
 			
 			// set up expected sequence of calls on request 
 
@@ -471,7 +469,6 @@ public class RequestWrapperTest extends TestCase {
 
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testNewInstanceFromGetRequest_ARQ() {
 		try {
 			
@@ -479,24 +476,24 @@ public class RequestWrapperTest extends TestCase {
 			HttpServletRequest request = createMock(HttpServletRequest.class);
 
 			String queryString = "SELECT (count(distinct ?s) AS ?count) WHERE { ?s ?p ?o}";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
-			Vector headerNamesV = new Vector();
+			Vector<String> headerNamesV = new Vector<String>();
 			headerNamesV.add("Host");
-			Vector hostV = new Vector();
+			Vector<String> hostV = new Vector<String>();
 			hostV.add("localhost");
-			Enumeration host = hostV.elements();
+			Enumeration<String> host = hostV.elements();
 			headerNamesV.add("User-agent");
-			Vector uaV = new Vector();
+			Vector<String> uaV = new Vector<String>();
 			uaV.add("sparqlite-tester");
-			Enumeration ua = uaV.elements();
-			Enumeration headerNames = headerNamesV.elements();
+			Enumeration<String> ua = uaV.elements();
+			Enumeration<String> headerNames = headerNamesV.elements();
 			
 			ServletConfig config = createMock(ServletConfig.class);
 			
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(RequestWrapper.QUERYSYNTAX);
 			
 			// set expectations on servlet config

@@ -26,12 +26,11 @@ public class QueryPolicyTest extends TestCase {
 		super.tearDown();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testQueryPolicyServletConfig() {
 
 		ServletConfig config = createMock(ServletConfig.class);
 		
-		Vector names = new Vector();
+		Vector<String> names = new Vector<String>();
 		names.add(QueryPolicy.DISALLOWVARIABLEPREDICATES);
 		names.add(QueryPolicy.SELECTLIMITCEILING);
 		names.add(QueryPolicy.CONSTRUCTLIMITCEILING);

@@ -61,7 +61,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		
 		log.info("create allbooks lucene index");
 		larqBuilder = new IndexBuilderString(luceneLoc);
-		for (Iterator it = allbooks.listNames(); it.hasNext();) {
+		for (Iterator<String> it = allbooks.listNames(); it.hasNext();) {
 			String modelName = it.next().toString();
 			log.info("indexing named model: "+modelName);
 			Model model = allbooks.getNamedModel(modelName);
@@ -71,7 +71,6 @@ public class EndpointTDBLARQTest extends TestCase {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public EndpointTDBLARQTest(String name) {
 		super(name);
 	}

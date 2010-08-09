@@ -40,7 +40,6 @@ public class ProcessorTest extends TestCase {
 		super.tearDown();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testProcessor() {
 		try {
 			
@@ -165,7 +164,7 @@ public class ProcessorTest extends TestCase {
 			Enumeration headerNames = headerNamesV.elements();
 			
 			String queryString = "ASK { ?s ?p ?o }";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
@@ -261,7 +260,7 @@ public class ProcessorTest extends TestCase {
 			Enumeration headerNames = headerNamesV.elements();
 			
 			String queryString = "SELECT (count(distinct ?s) AS ?count) WHERE { ?s ?p ?o}";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
@@ -278,7 +277,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(RequestWrapper.QUERYSYNTAX);
 			
 			// set expectations on servlet config
@@ -362,7 +361,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(QueryPolicy.DISALLOWVARIABLEPREDICATES);
 			names.add(QueryPolicy.DISALLOWFILTERS);
 			names.add(QueryPolicy.SELECTLIMITCEILING);

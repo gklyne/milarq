@@ -47,7 +47,6 @@ public class ProcessorAsyncTest extends TestCase {
 		super.tearDown();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testProcessorAsync() {
 		try {
 			
@@ -64,7 +63,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
@@ -86,7 +85,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testCheckEndpointExists_doesnotexist() {
 		try {
 			
@@ -103,7 +101,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
@@ -129,7 +127,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testCheckEndpointExists_exists() {
 		try {
 			
@@ -146,7 +143,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
@@ -170,7 +167,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testWrapRequest() {
 		try {
 			// create mock
@@ -180,7 +176,7 @@ public class ProcessorAsyncTest extends TestCase {
 			Enumeration headerNames = headerNamesV.elements();
 			
 			String queryString = "ASK { ?s ?p ?o }";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
@@ -197,7 +193,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements()); // called by ProcessorAsync
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3"); 
@@ -221,7 +217,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testWrapRequest_badGet() {
 		try {
 			// create mock
@@ -244,7 +239,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements()); // called by ProcessorAsync
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3"); 
@@ -272,7 +267,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testWrapRequest_ARQ() {
 		try {
 			// create mock
@@ -282,7 +276,7 @@ public class ProcessorAsyncTest extends TestCase {
 			Enumeration headerNames = headerNamesV.elements();
 			
 			String queryString = "SELECT (count(distinct ?s) AS ?count) WHERE { ?s ?p ?o}";
-			Vector paramNames = new  Vector();
+			Vector<String> paramNames = new  Vector<String>();
 			paramNames.add("query");
 			String[] queryParams = { queryString } ;
 			
@@ -299,7 +293,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(RequestWrapper.QUERYSYNTAX);
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements()); // called by ProcessorAsync
@@ -325,7 +319,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testApplyQueryPolicy_lax() {
 		try {
 			// create mock
@@ -368,7 +361,6 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testApplyQueryPolicy_strict() {
 		try {
 			// create mock
@@ -383,7 +375,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(QueryPolicy.DISALLOWVARIABLEPREDICATES);
 			names.add(QueryPolicy.DISALLOWFILTERS);
 			names.add(QueryPolicy.SELECTLIMITCEILING);
@@ -478,7 +470,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
@@ -519,7 +511,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletContext);
 			
 			// set up expected calls on config 
-			Vector names = new Vector();
+			Vector<String> names = new Vector<String>();
 			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
 			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
 			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
