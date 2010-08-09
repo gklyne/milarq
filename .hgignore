@@ -4,10 +4,4 @@ syntax: regexp
 syntax: regexp
 ^webapp/WEB-INF/data$
 syntax: regexp
-^webapp/WEB-INF/data/lucene$
-syntax: regexp
-^webapp/WEB-INF/data/lucene/allbooks$
-syntax: regexp
-^webapp/WEB-INF/data/lucene/rowling$
-syntax: regexp
-^webapp/WEB-INF/data/lucene/tolkien$
+^webapp/WEB-INF/data/lucene.*$

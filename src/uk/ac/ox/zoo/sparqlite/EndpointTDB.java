@@ -34,7 +34,7 @@ public class EndpointTDB extends Endpoint {
 	String storeDescFilePath = null;
 	Log log = LogFactory.getLog(EndpointTDB.class);
 	boolean exists = false;
-	Dataset dataset = null;
+	public Dataset dataset = null;
 	IndexLARQ index = null;
 	boolean lookedForIndex = false;
 	
@@ -77,7 +77,7 @@ public class EndpointTDB extends Endpoint {
 			log.trace("create query execution");
 			execution = QueryExecutionFactory.create(query, dataset);
 			// TODO: control UnionDefaultGraph setting with option
-			execution.getContext().set(TDB.symUnionDefaultGraph, true);
+			execution.getContext().set(TDB.symUnionDefaultGraph, false); // HERE
 			if (index != null) {
 				log.trace("set larq index");
 				LARQ.setDefaultIndex(execution.getContext(), index);
@@ -191,6 +191,7 @@ public class EndpointTDB extends Endpoint {
 					getLarqIndex(storeDescRoot);
 					log.trace("assemble TDB dataset via TDB factory, using " + storeDescFilePath );
 					dataset = TDBFactory.assembleDataset(storeDescFilePath);
+					System.err.println( "|>> dataset := " + dataset );
 					return dataset;
 				}
 								

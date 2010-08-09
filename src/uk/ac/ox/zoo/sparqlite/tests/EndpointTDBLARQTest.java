@@ -207,6 +207,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl";
 			endpoint = new EndpointTDB(filePath);
+			assertTrue( endpoint.exists() );
 
 			queryString = "ASK { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
@@ -214,8 +215,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			
 			assertNotNull(execution);
 			
-			boolean result = execution.execAsk();
-			assertTrue(result);
+			assertTrue( "no items found in TDB/LARQ", execution.execAsk() );
 
 			queryString = "SELECT * WHERE { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
