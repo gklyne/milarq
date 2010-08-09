@@ -12,6 +12,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
+import uk.ac.ox.zoo.sparqlite.config.Vocab;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
@@ -22,11 +23,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils;
 import com.hp.hpl.jena.tdb.TDB;
 import com.hp.hpl.jena.tdb.TDBFactory;
@@ -34,10 +31,12 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class EndpointTDB extends Endpoint {
 	
-	String storeDescFilePath = null;
-	Log log = LogFactory.getLog(EndpointTDB.class);
+    Log log = LogFactory.getLog(EndpointTDB.class);
+
+    public Dataset dataset = null;
+
+    String storeDescFilePath = null;
 	boolean exists = false;
-	public Dataset dataset = null;
 	IndexLARQ index = null;
 	boolean lookedForIndex = false;
 	
@@ -60,7 +59,7 @@ public class EndpointTDB extends Endpoint {
 		init();
 	}
 	
-	public EndpointTDB(String storeDescFilePath) {
+	public EndpointTDB( String storeDescFilePath ) {
 		this.storeDescFilePath = storeDescFilePath;
 		this.config = Config.fake(storeDescFilePath);
 		init();
@@ -71,8 +70,7 @@ public class EndpointTDB extends Endpoint {
 		log.trace("initialise endpoint");
 
 		log.trace("check store desc file exists");
-		File storeDescFile = new File(storeDescFilePath);
-		exists = storeDescFile.exists();
+		exists = new File(storeDescFilePath).exists();
 		
 	}
 
@@ -174,25 +172,22 @@ public class EndpointTDB extends Endpoint {
 				storeDescModel.read(storeDescFile.toURI().toString(), "TURTLE");
 				
 				log.trace("find the dataset description root");
-				Resource storeDescRoot = null;
 				
-				Resource JARDFDataset = storeDescModel.createResource("http://jena.hpl.hp.com/2005/11/Assembler#RDFDataset");
-				ResIterator list = storeDescModel.listSubjectsWithProperty(RDF.type, JARDFDataset);
+				ResIterator list = storeDescModel.listSubjectsWithProperty(RDF.type, Vocab.RDF_Dataset);
 				if (list.hasNext()) {
 					log.trace("found mixed dataset");
-					storeDescRoot = list.nextResource();
+					Resource storeDescRoot = list.nextResource();
 					getLarqIndex(storeDescRoot);
 					log.trace("assemble mixed dataset via generic dataset factory");
-					log.trace("storeDescFilePath: "+storeDescFilePath.getClass());
+					log.trace("storeDescFilePath: " + storeDescFilePath );
 					dataset = DatasetFactory.assemble(storeDescFilePath);
 					return dataset;
 				}
 				
-				Resource TDBDataset = storeDescModel.createResource("http://jena.hpl.hp.com/2008/tdb#DatasetTDB");
-				list = storeDescModel.listSubjectsWithProperty(RDF.type, TDBDataset);
+				list = storeDescModel.listSubjectsWithProperty(RDF.type, Vocab.TDB_Dataset);
 				if (list.hasNext()) {
 					log.trace("found TDB dataset");
-					storeDescRoot = list.nextResource();
+					Resource storeDescRoot = list.nextResource();
 					getLarqIndex(storeDescRoot);
 					log.trace("assemble TDB dataset via TDB factory, using " + storeDescFilePath );
 					dataset = TDBFactory.assembleDataset(storeDescFilePath);
@@ -216,8 +211,7 @@ public class EndpointTDB extends Endpoint {
 		if (!exists()) throw new EndpointNotFoundException("no store description file found for path: "+storeDescFilePath);
 	}
 	
-	@Override public
-	boolean exists() throws UnexpectedException {
+	@Override public boolean exists() throws UnexpectedException {
 		return exists;
 	}
 
