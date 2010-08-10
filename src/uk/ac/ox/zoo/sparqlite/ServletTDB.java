@@ -46,9 +46,9 @@ import uk.ac.ox.zoo.sparqlite.config.Config;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    Config c = Config.getNamedConfig( "sparqlite" );
-		Endpoint endpoint = new EndpointTDB( c, request, getServletContext());
-		doCommon(request, response, endpoint); // superclass
+	    Config c = Config.create( request.getPathInfo(), getServletContext() ); // getNamedConfig( "sparqlite" );
+		Endpoint endpoint = new EndpointTDB( c, request, getServletContext() );
+		doCommon(request, response, endpoint); 
 	}  	  	  	  
 
 	/* (non-Javadoc)

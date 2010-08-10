@@ -36,13 +36,8 @@ public class EndpointTDB extends Endpoint {
 	
     Log log = LogFactory.getLog(EndpointTDB.class);
 
-    public Dataset dataset = null;
-
-    String storeDescFilePath = null;
-	boolean exists = false;
+    Dataset dataset = null;
 	IndexLARQ index = null;
-	boolean lookedForIndex = false;
-	
 	final Config config;
 	
 	static {
@@ -51,34 +46,24 @@ public class EndpointTDB extends Endpoint {
 	}
 
     public EndpointTDB(HttpServletRequest request, ServletContext context) {
-        this( Config.neutral, request, context );
+        this
+            ( new Config( "", context.getRealPath("WEB-INF/tdb" + request.getPathInfo() +".ttl") ) 
+            , request
+            , context 
+            );
     }
     
-	public EndpointTDB(Config config, HttpServletRequest request, ServletContext context) {
-		// convention for mapping request path to store description file path
+	public EndpointTDB( Config config, HttpServletRequest request, ServletContext context ) {
 	    this.config = config;
-		this.pathInfo = request.getPathInfo();
-		this.storeDescFilePath = context.getRealPath("WEB-INF/tdb"+pathInfo+".ttl");
-		init();
+		this.pathInfo = config.GETPATHINFO(); 
 	}
 	
 	public EndpointTDB( String storeDescFilePath ) {
-		this.storeDescFilePath = storeDescFilePath;
-		this.config = Config.fake(storeDescFilePath);
-		init();
+	    this.config = Config.fake(storeDescFilePath);
 	}
 
-	void init() {
-
-		log.trace("initialise endpoint");
-
-		log.trace("check store desc file exists");
-		exists = new File(storeDescFilePath).exists();
-		
-	}
-
-	@Override public
-	QueryExecution getQueryExecution(Query query) throws EndpointNotFoundException, UnexpectedException {
+	@Override public QueryExecution getQueryExecution(Query query) 
+	    throws EndpointNotFoundException, UnexpectedException {
 		getDataset();
 		QueryExecution execution = null;
 		try {
@@ -135,11 +120,10 @@ public class EndpointTDB extends Endpoint {
 		guardExists();
 		if (dataset == null) {
 			try {
-			    log.trace( "assembling dataset and optional LARQ index from " + storeDescFilePath );
-// OLD HAD:		storeDescModel.read(storeDescFile.toURI().toString(), "TURTLE");
-			    Model model = FileManager.get().loadModel( storeDescFilePath );
+			    String sd = config.getStoreDescFilePath();
+			    log.trace( "assembling dataset and optional LARQ index from " + sd );
+			    Model model = FileManager.get().loadModel( sd );
 			    model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
-			    // model.write( System.err, "TTL" ); // DEBUG
 			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
 			    log.trace( "dataset root is " + root );
 			    dataset = (Dataset) Assembler.general.open( root );
@@ -177,11 +161,13 @@ public class EndpointTDB extends Endpoint {
 	
 	void guardExists() throws UnexpectedException, EndpointNotFoundException {
 		log.trace("exists guard condition");
-		if (!exists()) throw new EndpointNotFoundException("no store description file found for path: "+storeDescFilePath);
+		if (!exists()) 
+		    throw new EndpointNotFoundException
+		        ("no store description file found for path: " + config.getStoreDescFilePath() );
 	}
 	
 	@Override public boolean exists() throws UnexpectedException {
-		return exists;
+		return config.getStoreDescFileExists();
 	}
 
 }

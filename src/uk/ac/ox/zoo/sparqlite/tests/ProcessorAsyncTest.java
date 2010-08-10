@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import uk.ac.ox.zoo.sparqlite.*;
 import uk.ac.ox.zoo.sparqlite.exceptions.AbortRequestException;
+import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -48,41 +49,34 @@ public class ProcessorAsyncTest extends TestCase {
 	}
 	
 	public void testProcessorAsync() {
-		try {
-			
-			// set up expected sequence of calls on request 
-			expect(request.getPathInfo()).andReturn("/rowling"); // called by EndpointTDB
-			replay(request);
+		// set up expected sequence of calls on request 
+		expect(request.getPathInfo()).andReturn("/rowling"); // called by EndpointTDB
+		replay(request);
 
-			// set up expected sequence of calls on request 
-			// none
-			replay(response);
+		// set up expected sequence of calls on request 
+		// none
+		replay(response);
 
-			// set up expected calls on context
-			expect(servletContext.getRealPath("WEB-INF/tdb/rowling.ttl")).andReturn("webapp/WEB-INF/tdb/rowling.ttl"); // called by EndpointTDB
-			replay(servletContext);
+		// set up expected calls on context
+		expect(servletContext.getRealPath("WEB-INF/tdb/rowling.ttl")).andReturn("webapp/WEB-INF/tdb/rowling.ttl"); // called by EndpointTDB
+		replay(servletContext);
 
-			// set up expected calls on config 
-			Vector<String> names = new Vector<String>();
-			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
-			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
-			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
-			replay(servletConfig);
-			
-			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
-			ProcessorAsync processor = new ProcessorAsync(endpoint, servletConfig, executor);
-			
-			assertNotNull(endpoint);
-			assertNotNull(processor);
-						
-			verify(request); verify(response); verify(servletContext); verify(servletConfig);
-			
-			
-		} catch (Throwable t) {
-			t.printStackTrace();
-			fail(t.getLocalizedMessage());
-		}
+		// set up expected calls on config 
+		Vector<String> names = new Vector<String>();
+		names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
+		expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
+		expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3");
+		replay(servletConfig);
+		
+		// begin testing
+		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		ProcessorAsync processor = new ProcessorAsync(endpoint, servletConfig, executor);
+		
+		assertNotNull(endpoint);
+		assertNotNull(processor);
+					
+		verify(request); verify(response); verify(servletContext); verify(servletConfig);
+
 	}
 
 	public void testCheckEndpointExists_doesnotexist() {
@@ -217,54 +211,49 @@ public class ProcessorAsyncTest extends TestCase {
 		}
 	}
 
-	public void testWrapRequest_badGet() {
+	public void testWrapRequest_badGet() throws UnexpectedException {
+
+		HttpServletRequest request = createMock(HttpServletRequest.class);
+
+		Vector headerNamesV = new Vector();
+		Enumeration headerNames = headerNamesV.elements();
+		
+		Vector paramNames = new Vector();
+		
+		// set up expected sequence of calls on request 
+		expect(request.getPathInfo()).andReturn("/rowling"); // called by EndpointTDB
+		expect(request.getHeaderNames()).andReturn(headerNames); // called by RequestWrapper 			
+		expect(request.getParameterNames()).andReturn(paramNames.elements()); // called by RequestWrapper
+		expect(request.getMethod()).andReturn("GET"); // called by RequestWrapper
+		replay(request);
+
+		// set up expected calls on context
+		expect(servletContext.getRealPath("WEB-INF/tdb/rowling.ttl")).andReturn("webapp/WEB-INF/tdb/rowling.ttl"); // called by EndpointTDB
+		replay(servletContext);
+		
+		// set up expected calls on config 
+		Vector<String> names = new Vector<String>();
+		names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
+		expect(servletConfig.getInitParameterNames()).andReturn(names.elements()); // called by ProcessorAsync
+		expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3"); 
+		replay(servletConfig);
+
+		// begin testing
+		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
+
+		// call method
+		RequestWrapper wrapped = null;
 		try {
-			// create mock
-			HttpServletRequest request = createMock(HttpServletRequest.class);
-
-			Vector headerNamesV = new Vector();
-			Enumeration headerNames = headerNamesV.elements();
-			
-			Vector paramNames = new Vector();
-			
-			// set up expected sequence of calls on request 
-			expect(request.getPathInfo()).andReturn("/rowling"); // called by EndpointTDB
-			expect(request.getHeaderNames()).andReturn(headerNames); // called by RequestWrapper 			
-			expect(request.getParameterNames()).andReturn(paramNames.elements()); // called by RequestWrapper
-			expect(request.getMethod()).andReturn("GET"); // called by RequestWrapper
-			replay(request);
-
-			// set up expected calls on context
-			expect(servletContext.getRealPath("WEB-INF/tdb/rowling.ttl")).andReturn("webapp/WEB-INF/tdb/rowling.ttl"); // called by EndpointTDB
-			replay(servletContext);
-			
-			// set up expected calls on config 
-			Vector<String> names = new Vector<String>();
-			names.add(ProcessorAsync.QUERYEXECUTIONTIMEOUT);
-			expect(servletConfig.getInitParameterNames()).andReturn(names.elements()); // called by ProcessorAsync
-			expect(servletConfig.getInitParameter(ProcessorAsync.QUERYEXECUTIONTIMEOUT)).andReturn("3"); 
-			replay(servletConfig);
-
-			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
-			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
-
-			// call method
-			RequestWrapper wrapped = null;
-			try {
-				wrapped = handler.wrapRequest(request);
-				fail("exception should be thrown");
-			} catch ( AbortRequestException are ) {
-				assertEquals(400, are.getResponseCode());
-			}
-			assertNull(wrapped);
-			
-			verify(request); verify(servletContext); verify(servletConfig);
-			
-		} catch (Throwable t) {
-			t.printStackTrace();
-			fail(t.getLocalizedMessage());
+			wrapped = handler.wrapRequest(request);
+			fail("exception should be thrown");
+		} catch ( AbortRequestException are ) {
+			assertEquals(400, are.getResponseCode());
 		}
+		assertNull(wrapped);
+		
+		verify(request); verify(servletContext); verify(servletConfig);
+
 	}
 
 	public void testWrapRequest_ARQ() {

@@ -51,7 +51,7 @@ import uk.ac.ox.zoo.sparqlite.config.Config;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Endpoint endpoint = new EndpointTDB(Config.neutral, request, getServletContext());
+		Endpoint endpoint = new EndpointTDB( request, getServletContext() );
 		doCommon(request, response, endpoint); // superclass
 	}  	  	  	 
 	

@@ -8,6 +8,6 @@ public class Init extends ServletBase
 
     public void init()
         {
-        Config.setNamedConfig( "sparqlite", new Config() );
+        Config.setNamedConfig( "sparqlite", new Config( "<spoo>", "<init>" ) );
         }
     }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import uk.ac.ox.zoo.sparqlite.*;
 import uk.ac.ox.zoo.sparqlite.exceptions.AbortRequestException;
+import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -76,44 +77,39 @@ public class ProcessorTest extends TestCase {
 		}
 	}
 
-	public void testCheckEndpointExists_doesnotexist() {
+	public void testCheckEndpointExists_doesnotexist() throws UnexpectedException {
+	
+		// set up expected sequence of calls on request 
+		expect(request.getPathInfo()).andReturn("/doesnotexist"); // called by EndpointTDB
+		replay(request);
+
+		// set up expected sequence of calls on request 
+		// none
+		replay(response);
+
+		// set up expected calls on context
+		expect(servletContext.getRealPath("WEB-INF/tdb/doesnotexist.ttl")).andReturn("webapp/WEB-INF/tdb/doesnotexist.ttl"); // called by EndpointTDB
+		replay(servletContext);
+		
+		// set up expected calls on config 
+		Vector names = new Vector();
+		expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
+		replay(servletConfig);
+		
+		// begin testing
+		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		Processor handler = new Processor(endpoint, servletConfig);
+
 		try {
-			
-			// set up expected sequence of calls on request 
-			expect(request.getPathInfo()).andReturn("/doesnotexist"); // called by EndpointTDB
-			replay(request);
-
-			// set up expected sequence of calls on request 
-			// none
-			replay(response);
-
-			// set up expected calls on context
-			expect(servletContext.getRealPath("WEB-INF/tdb/doesnotexist.ttl")).andReturn("webapp/WEB-INF/tdb/doesnotexist.ttl"); // called by EndpointTDB
-			replay(servletContext);
-			
-			// set up expected calls on config 
-			Vector names = new Vector();
-			expect(servletConfig.getInitParameterNames()).andReturn(names.elements());
-			replay(servletConfig);
-			
-			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
-			Processor handler = new Processor(endpoint, servletConfig);
-
-			try {
-				handler.checkEndpointExists();
-				fail("exception should be thrown");
-			} catch (AbortRequestException are) {
-				// expected
-				assertEquals(404, are.getResponseCode());
-			}
-			
-			verify(request); verify(response); verify(servletContext); verify(servletConfig);
-						
-		} catch (Throwable t) {
-			t.printStackTrace();
-			fail(t.getLocalizedMessage());
+			handler.checkEndpointExists();
+			fail("exception should be thrown");
+		} catch (AbortRequestException are) {
+			// expected
+			assertEquals(404, are.getResponseCode());
 		}
+		
+		verify(request); verify(response); verify(servletContext); verify(servletConfig);
+		
 	}
 
 	public void testCheckEndpointExists_exists() {

@@ -1,7 +1,10 @@
 package uk.ac.ox.zoo.sparqlite.config;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import com.hp.hpl.jena.shared.NotFoundException;
 
@@ -12,12 +15,17 @@ import com.hp.hpl.jena.shared.NotFoundException;
 */
 public class Config
     {
+    public static Config neuxxtral = new Config( "<pathinfo>", "<neutral>" );
 
-    public static Config neutral = new Config();
-
+    protected final String storeDescFilePath;
+    protected final String PATHINFO;
+    
+    public Config( String PATHINFO, String storeDescFilePath )
+        { this.PATHINFO = PATHINFO; this.storeDescFilePath = storeDescFilePath; }
+    
     public static Config fake( String storeDescFilePath )
         {
-        return new Config();
+        return new Config( "<PATHINFO>", storeDescFilePath );
         }
 
     static final Map<String, Config> namedConfigs = new HashMap<String, Config>();
@@ -33,5 +41,20 @@ public class Config
         {
         namedConfigs.put( name, config );
         }
+
+    public static Config create( String pathInfo, ServletContext context )
+        {
+        String storeDescFilePath = context.getRealPath( "WEB-INF/tdb" + pathInfo + ".ttl" );
+        return new Config( pathInfo, storeDescFilePath );
+        }
+
+    public String getStoreDescFilePath()
+        { return storeDescFilePath; }
+
+    public boolean getStoreDescFileExists()
+        { return new File( storeDescFilePath ).exists(); }
+    
+    public String GETPATHINFO()
+        { return PATHINFO; }
 
     }
