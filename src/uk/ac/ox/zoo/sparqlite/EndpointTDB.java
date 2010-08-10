@@ -8,18 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
 import uk.ac.ox.zoo.sparqlite.config.Vocab;
+
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
 import com.hp.hpl.jena.assembler.Assembler;
 import com.hp.hpl.jena.assembler.AssemblerHelp;
 import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -28,10 +29,7 @@ import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils;
 import com.hp.hpl.jena.tdb.TDB;
-import com.hp.hpl.jena.tdb.TDBFactory;
-import com.hp.hpl.jena.tdb.assembler.VocabTDB;
 import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class EndpointTDB extends Endpoint {
@@ -145,49 +143,37 @@ public class EndpointTDB extends Endpoint {
 			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
 			    log.trace( "dataset root is " + root );
 			    dataset = (Dataset) Assembler.general.open( root );
-			    getLarqIndex( root );
-								
+			    setLARQIndexIfPresent( root );				
 			} catch (Throwable ex) {
-	        	String message = "unexpected error: "+ex.getLocalizedMessage();
+	        	String message = "unexpected error: " + ex.getLocalizedMessage();
 	        	throw new UnexpectedException(message, ex);
-			}
-			if (dataset == null) {
-				throw new UnexpectedException("could not assemble dataset; assembler file does not contain a dataset node?");
 			}
 		}
 		return dataset;
 	}
-	
-    IndexLARQ getLarqIndex(Resource storeDescRoot) throws UnexpectedException {
-        Property larqLocation = storeDescRoot.getModel().createProperty("http://purl.org/net/sparqlite/vocab#larqLocation");
-        
-        log.trace("look for a larq lucene index location");
-        if (storeDescRoot.hasProperty(larqLocation)) {
-    
-            String location = storeDescRoot.getProperty(larqLocation).getString();
-            log.trace("found larq location: "+location);
-    
-            log.trace("instantiate a larq index");
-    
-            // N.B. this doesn't work, probably because IndexBuilderString wipes the index before creating a new one...
-    //          IndexBuilderString larqBuilder = new IndexBuilderString(location);
-    //          index = larqBuilder.getIndex();
-            
-            try {
-                index = new IndexLARQ(IndexReader.open(location));
-            } catch (CorruptIndexException e) {
-                throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
-            } catch (IOException e) {
-                throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
+
+    private void setLARQIndexIfPresent( Resource root ) throws UnexpectedException
+        {
+        Statement locStatement = root.getProperty( Vocab.LARQ_Location );
+        if (locStatement == null)
+            log.trace( "no LARQ location provided" );
+        else
+            {
+            String location = locStatement.getString();
+            log.trace( "LARQ location " + location + " provided" );
+            setLARQIndex( location );			        
             }
-        } 
-        else {
-            log.trace("no larq location found");
-            // larqLocation not required
-    //          throw new UnexpectedException("no sparqlite:larqLocation property found on dataset description");
         }
-        return index;
-    }
+
+    private void setLARQIndex( String location ) throws UnexpectedException
+        {
+        try 
+            { index = new IndexLARQ(IndexReader.open(location)); } 
+        catch (CorruptIndexException e) 
+            { throw new UnexpectedException("unexpected exception opening lucene index reader: " + e.getLocalizedMessage(), e); } 
+        catch (IOException e) 
+            { throw new UnexpectedException("unexpected exception opening lucene index reader: " + e.getLocalizedMessage(), e); }
+        }
 	
 	void guardExists() throws UnexpectedException, EndpointNotFoundException {
 		log.trace("exists guard condition");
