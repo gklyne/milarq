@@ -16,6 +16,8 @@ import uk.ac.ox.zoo.sparqlite.config.Vocab;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
+import com.hp.hpl.jena.assembler.Assembler;
+import com.hp.hpl.jena.assembler.AssemblerHelp;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.Query;
@@ -27,7 +29,10 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils;
 import com.hp.hpl.jena.tdb.TDB;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.tdb.assembler.VocabTDB;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class EndpointTDB extends Endpoint {
 	
@@ -94,36 +99,6 @@ public class EndpointTDB extends Endpoint {
 		return execution;
 	}
 
-	IndexLARQ getLarqIndex(Resource storeDescRoot) throws UnexpectedException {
-		Property larqLocation = storeDescRoot.getModel().createProperty("http://purl.org/net/sparqlite/vocab#larqLocation");
-		
-		log.trace("look for a larq lucene index location");
-		if (storeDescRoot.hasProperty(larqLocation)) {
-
-			String location = storeDescRoot.getProperty(larqLocation).getString();
-			log.trace("found larq location: "+location);
-
-			log.trace("instantiate a larq index");
-
-			// N.B. this doesn't work, probably because IndexBuilderString wipes the index before creating a new one...
-//				IndexBuilderString larqBuilder = new IndexBuilderString(location);
-//				index = larqBuilder.getIndex();
-			
-			try {
-				index = new IndexLARQ(IndexReader.open(location));
-			} catch (CorruptIndexException e) {
-				throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
-			} catch (IOException e) {
-				throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
-			}
-		} 
-		else {
-			log.trace("no larq location found");
-			// larqLocation not required
-//				throw new UnexpectedException("no sparqlite:larqLocation property found on dataset description");
-		}
-		return index;
-	}
 	
 	@Override void close() throws UnexpectedException {
 		if (index != null) {
@@ -162,38 +137,15 @@ public class EndpointTDB extends Endpoint {
 		guardExists();
 		if (dataset == null) {
 			try {
-
-				log.trace("assemble dataset");
-				log.trace("check if pure TDB or mixed dataset");
-				
-				log.trace("read the assembler store description into a model");
-				File storeDescFile = new File(storeDescFilePath);
-				Model storeDescModel = ModelFactory.createDefaultModel();
-				storeDescModel.read(storeDescFile.toURI().toString(), "TURTLE");
-				
-				log.trace("find the dataset description root");
-				
-				ResIterator list = storeDescModel.listSubjectsWithProperty(RDF.type, Vocab.RDF_Dataset);
-				if (list.hasNext()) {
-					log.trace("found mixed dataset");
-					Resource storeDescRoot = list.nextResource();
-					getLarqIndex(storeDescRoot);
-					log.trace("assemble mixed dataset via generic dataset factory");
-					log.trace("storeDescFilePath: " + storeDescFilePath );
-					dataset = DatasetFactory.assemble(storeDescFilePath);
-					return dataset;
-				}
-				
-				list = storeDescModel.listSubjectsWithProperty(RDF.type, Vocab.TDB_Dataset);
-				if (list.hasNext()) {
-					log.trace("found TDB dataset");
-					Resource storeDescRoot = list.nextResource();
-					getLarqIndex(storeDescRoot);
-					log.trace("assemble TDB dataset via TDB factory, using " + storeDescFilePath );
-					dataset = TDBFactory.assembleDataset(storeDescFilePath);
-					System.err.println( "|>> dataset := " + dataset );
-					return dataset;
-				}
+			    log.trace( "assembling dataset and optional LARQ index from " + storeDescFilePath );
+// OLD HAD:		storeDescModel.read(storeDescFile.toURI().toString(), "TURTLE");
+			    Model model = FileManager.get().loadModel( storeDescFilePath );
+			    model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
+			    // model.write( System.err, "TTL" ); // DEBUG
+			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
+			    log.trace( "dataset root is " + root );
+			    dataset = (Dataset) Assembler.general.open( root );
+			    getLarqIndex( root );
 								
 			} catch (Throwable ex) {
 	        	String message = "unexpected error: "+ex.getLocalizedMessage();
@@ -205,6 +157,37 @@ public class EndpointTDB extends Endpoint {
 		}
 		return dataset;
 	}
+	
+    IndexLARQ getLarqIndex(Resource storeDescRoot) throws UnexpectedException {
+        Property larqLocation = storeDescRoot.getModel().createProperty("http://purl.org/net/sparqlite/vocab#larqLocation");
+        
+        log.trace("look for a larq lucene index location");
+        if (storeDescRoot.hasProperty(larqLocation)) {
+    
+            String location = storeDescRoot.getProperty(larqLocation).getString();
+            log.trace("found larq location: "+location);
+    
+            log.trace("instantiate a larq index");
+    
+            // N.B. this doesn't work, probably because IndexBuilderString wipes the index before creating a new one...
+    //          IndexBuilderString larqBuilder = new IndexBuilderString(location);
+    //          index = larqBuilder.getIndex();
+            
+            try {
+                index = new IndexLARQ(IndexReader.open(location));
+            } catch (CorruptIndexException e) {
+                throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
+            } catch (IOException e) {
+                throw new UnexpectedException("unexpected exception opening lucene index reader: "+e.getLocalizedMessage(), e);
+            }
+        } 
+        else {
+            log.trace("no larq location found");
+            // larqLocation not required
+    //          throw new UnexpectedException("no sparqlite:larqLocation property found on dataset description");
+        }
+        return index;
+    }
 	
 	void guardExists() throws UnexpectedException, EndpointNotFoundException {
 		log.trace("exists guard condition");
