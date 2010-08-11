@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
+import uk.ac.ox.zoo.sparqlite.tests.Utilities;
 
 
 /**
@@ -51,7 +52,7 @@ import uk.ac.ox.zoo.sparqlite.config.Config;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Endpoint endpoint = new EndpointTDB( request, getServletContext() );
+		Endpoint endpoint = Utilities.createEndpointTDB( request, getServletContext() );
 		doCommon(request, response, endpoint); // superclass
 	}  	  	  	 
 	

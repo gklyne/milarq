@@ -41,11 +41,11 @@ public class EndpointTDBTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/doesnotexist.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			assertFalse(endpoint.exists());
 
 			filePath = "webapp/WEB-INF/tdb/rowling.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			assertTrue(endpoint.exists());
 
 		} catch (Exception ex) {
@@ -64,7 +64,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/rowling.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			assertNotNull(dataset);
@@ -91,7 +91,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/doesnotexists.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			fail("this should never be reached, as exception should be thrown");
@@ -115,7 +115,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/allbooks.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			assertNotNull(dataset);
@@ -162,7 +162,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 			
 			filePath = "webapp/WEB-INF/tdb/rowling.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 
 			queryString = "ASK { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
@@ -203,7 +203,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 			
 			filePath = "webapp/WEB-INF/tdb/allbooks.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 
 			queryString = "ASK { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
@@ -280,7 +280,7 @@ public class EndpointTDBTest extends TestCase {
 		try {
 			
 			filePath = "webapp/WEB-INF/tdb/allbooks-mixed.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 
 			queryString = "ASK { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
@@ -351,7 +351,7 @@ public class EndpointTDBTest extends TestCase {
 			String filePath = "webapp/WEB-INF/tdb/doesnotexist.ttl";
 
 			// start testing
-			EndpointTDB endpoint = new EndpointTDB(filePath);
+			EndpointTDB endpoint = Utilities.createEndpointTDB( filePath );
 			assertFalse(endpoint.exists());
 			
 			try {

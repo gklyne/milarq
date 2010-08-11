@@ -91,11 +91,11 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/doesnotexist.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			assertFalse(endpoint.exists());
 
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			assertTrue(endpoint.exists());
 
 		} catch (Exception ex) {
@@ -114,7 +114,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			assertNotNull(dataset);
@@ -135,7 +135,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/doesnotexists.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			fail("this should never be reached, as exception should be thrown");
@@ -159,7 +159,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/allbooks-larq.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			dataset = endpoint.getDataset();
 			
 			assertNotNull(dataset);
@@ -207,7 +207,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 			
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			assertTrue( endpoint.exists() );
 
 			queryString = "ASK { ?s ?p ?o }";
@@ -246,7 +246,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 			
 			filePath = "webapp/WEB-INF/tdb/allbooks-larq.ttl";
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 
 			queryString = "ASK { ?s ?p ?o }";
 			query = QueryFactory.create(queryString, Syntax.syntaxSPARQL);
@@ -323,7 +323,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl"; // jena assembler store description for TDB store
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			
 			queryString = StringUtils.join("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
@@ -353,7 +353,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/allbooks-larq.ttl"; // jena assembler store description for TDB store
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			
 			queryString = StringUtils.join("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
@@ -393,7 +393,7 @@ public class EndpointTDBLARQTest extends TestCase {
 		try {
 
 			filePath = "webapp/WEB-INF/tdb/allbooks-mixed-larq.ttl"; // jena assembler store description for TDB store
-			endpoint = new EndpointTDB(filePath);
+			endpoint = Utilities.createEndpointTDB( filePath );
 			
 			queryString = StringUtils.join("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
@@ -428,7 +428,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			String filePath = "webapp/WEB-INF/tdb/doesnotexist.ttl";
 
 			// start testing
-			EndpointTDB endpoint = new EndpointTDB(filePath);
+			EndpointTDB endpoint = Utilities.createEndpointTDB( filePath );
 			assertFalse(endpoint.exists());
 			
 			try {

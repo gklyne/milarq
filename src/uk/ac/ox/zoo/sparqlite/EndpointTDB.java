@@ -2,8 +2,6 @@ package uk.ac.ox.zoo.sparqlite;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,8 +10,6 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
-import uk.ac.ox.zoo.sparqlite.config.Vocab;
-
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
@@ -40,22 +36,7 @@ public class EndpointTDB extends Endpoint {
 	public EndpointTDB( Config config ) {
 	    this.config = config;
 	}
-
-	/**
-	    This is only here for testing; it was easier to gateway it in here
-	    than to change all the test entry points.
-	*/
-    public EndpointTDB( HttpServletRequest request, ServletContext context ) {
-        this( new Config( "", context.getRealPath("WEB-INF/tdb" + request.getPathInfo() +".ttl") ) );
-    }
 	
-	/**
-	    This also is only here for testing.
-	*/
-	public EndpointTDB( String storeDescFilePath ) {
-	    this( Config.fake(storeDescFilePath) );
-	}
-
 	@Override public QueryExecution getQueryExecution(Query query) 
 	    throws EndpointNotFoundException, UnexpectedException {
 		getDataset();
@@ -107,14 +88,7 @@ public class EndpointTDB extends Endpoint {
 		guardExists();
 		if (dataset == null) {
 			try {
-//			    String sd = config.getStoreDescFilePath();
-//			    log.trace( "assembling dataset and optional LARQ index from " + sd );
-//			    Model model = FileManager.get().loadModel( sd );
-//			    model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
-//			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
-//			    log.trace( "dataset root is " + root );
-			    dataset = config.getDataset(); // (Dataset) Assembler.general.open( root );
-//			    setLARQIndexIfPresent( root );			
+			    dataset = config.getDataset();
 			    String location = config.getLARQIndexLocation();
 			    if (location != null) setLARQIndex( location );
 			} catch (Throwable ex) {

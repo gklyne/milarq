@@ -23,8 +23,10 @@ public class Sparqlite
             }
         }
 
+    // TODO this should be controlled by the specification file
     public Config getConfig( String pathInfo, ServletContext context )
         {
-        return Config.create( pathInfo, context );
+        String storeDescFilePath = context.getRealPath( "WEB-INF/tdb" + pathInfo + ".ttl" );
+        return new Config( pathInfo, storeDescFilePath );
         }
     }

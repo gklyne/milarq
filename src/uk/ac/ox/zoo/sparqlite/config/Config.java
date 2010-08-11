@@ -24,41 +24,15 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class Config
     {
-    
     Log log = LogFactory.getLog( Config.class );
     
-    public static Config neuxxtral = new Config( "<pathinfo>", "<neutral>" );
-
     protected final String storeDescFilePath;
     protected final String PATHINFO;
     
+    protected Model description;
+    
     public Config( String PATHINFO, String storeDescFilePath )
         { this.PATHINFO = PATHINFO; this.storeDescFilePath = storeDescFilePath; }
-    
-    public static Config fake( String storeDescFilePath )
-        {
-        return new Config( "<PATHINFO>", storeDescFilePath );
-        }
-
-    static final Map<String, Config> namedConfigs = new HashMap<String, Config>();
-    
-    public static Config getNamedConfig( String name )
-        {
-        Config c = namedConfigs.get( name );
-        if (c == null) throw new NotFoundException( name );
-        return c;
-        }
-
-    public static void setNamedConfig( String name, Config config )
-        {
-        namedConfigs.put( name, config );
-        }
-
-    public static Config create( String pathInfo, ServletContext context )
-        {
-        String storeDescFilePath = context.getRealPath( "WEB-INF/tdb" + pathInfo + ".ttl" );
-        return new Config( pathInfo, storeDescFilePath );
-        }
 
     public String getStoreDescFilePath()
         { return storeDescFilePath; }
@@ -74,22 +48,33 @@ public class Config
 
     public Dataset getDataset()
         {
-        String sd = this.getStoreDescFilePath();
-        log.trace( "assembling dataset from " + sd );
-        Model model = FileManager.get().loadModel( sd );
-        model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
-        Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
-        log.trace( "dataset root is " + root );
+        Resource root = getDescriptionRoot();
         return (Dataset) Assembler.general.open( root );
+        }
+
+    private Resource getDescriptionRoot()
+        {
+        loadDescriptionIfNecessary();
+        Resource root = AssemblerHelp.singleRoot( description, Vocab.RDF_Dataset );
+        log.trace( "description root is " + root );
+        return root;
+        }
+    
+    private Model loadDescriptionIfNecessary()
+        {
+        if (description == null)
+            {
+            String sd = this.getStoreDescFilePath();
+            log.trace( "loading description model from " + sd );
+            description = FileManager.get().loadModel( sd );
+            description.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );            
+            }
+        return description;
         }
     
     public String getLARQIndexLocation()
         {
-        String sd = this.getStoreDescFilePath();
-        log.trace( "assembling dataset from " + sd );
-        Model model = FileManager.get().loadModel( sd );
-        model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
-        Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
+        Resource root = getDescriptionRoot();
         log.trace( "dataset root is " + root );
         Statement locStatement = root.getProperty( Vocab.LARQ_Location );
         if (locStatement == null)

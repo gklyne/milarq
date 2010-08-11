@@ -69,7 +69,7 @@ public class ProcessorAsyncTest extends TestCase {
 		replay(servletConfig);
 		
 		// begin testing
-		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 		ProcessorAsync processor = new ProcessorAsync(endpoint, servletConfig, executor);
 		
 		assertNotNull(endpoint);
@@ -102,7 +102,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 			
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			try {
@@ -144,7 +144,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 			
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			try {
@@ -194,7 +194,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync processor = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			// call method
@@ -239,7 +239,7 @@ public class ProcessorAsyncTest extends TestCase {
 		replay(servletConfig);
 
 		// begin testing
-		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 		ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 		// call method
@@ -291,7 +291,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 			
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync processor = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			// call method
@@ -328,7 +328,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			String queryString = "SELECT * WHERE { ?s ?p ?o }";
@@ -385,7 +385,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			// variable predicates
@@ -466,7 +466,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 	
 			String queryString = "SELECT * WHERE { ?s ?p ?o }";
@@ -507,7 +507,7 @@ public class ProcessorAsyncTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			ProcessorAsync handler = new ProcessorAsync(endpoint, servletConfig, executor);
 
 			// SELECT

@@ -62,7 +62,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 			
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor processor = new Processor(endpoint, servletConfig);
 			
 			assertNotNull(endpoint);
@@ -97,7 +97,7 @@ public class ProcessorTest extends TestCase {
 		replay(servletConfig);
 		
 		// begin testing
-		Endpoint endpoint = new EndpointTDB(request, servletContext);
+		Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 		Processor handler = new Processor(endpoint, servletConfig);
 
 		try {
@@ -133,7 +133,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 			
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 
 			try {
@@ -181,7 +181,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor processor = new Processor(endpoint, servletConfig);
 
 			// call method
@@ -225,7 +225,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 
 			// call method
@@ -282,7 +282,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);			
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor processor = new Processor(endpoint, servletConfig);
 
 			// call method
@@ -320,7 +320,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 
 			String queryString = "SELECT * WHERE { ?s ?p ?o }";
@@ -376,7 +376,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 
 			// variable predicates
@@ -456,7 +456,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 	
 			String queryString = "SELECT * WHERE { ?s ?p ?o }";
@@ -496,7 +496,7 @@ public class ProcessorTest extends TestCase {
 			replay(servletConfig);
 
 			// begin testing
-			Endpoint endpoint = new EndpointTDB(request, servletContext);
+			Endpoint endpoint = Utilities.createEndpointTDB( request, servletContext );
 			Processor handler = new Processor(endpoint, servletConfig);
 
 			// SELECT

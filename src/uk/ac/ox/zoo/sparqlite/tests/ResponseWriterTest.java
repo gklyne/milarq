@@ -137,7 +137,7 @@ public class ResponseWriterTest extends TestCase {
 		
 			// create a result set
 			String filePath = "webapp/WEB-INF/tdb/rowling.ttl";
-			Endpoint endpoint = new EndpointTDB(filePath);
+			Endpoint endpoint = Utilities.createEndpointTDB( filePath );
 			String queryString = "SELECT * WHERE { ?s ?p ?o }";
 			Query query = QueryFactory.create(queryString,Syntax.syntaxSPARQL);
 			QueryExecution qe = endpoint.getQueryExecution(query);
@@ -188,7 +188,7 @@ public class ResponseWriterTest extends TestCase {
 		
 			// create a model
 			String filePath = "webapp/WEB-INF/tdb/rowling.ttl";
-			Endpoint endpoint = new EndpointTDB(filePath);
+			Endpoint endpoint = Utilities.createEndpointTDB( filePath );
 			String queryString = "CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }";
 			Query query = QueryFactory.create(queryString,Syntax.syntaxSPARQL);
 			QueryExecution qe = endpoint.getQueryExecution(query);
