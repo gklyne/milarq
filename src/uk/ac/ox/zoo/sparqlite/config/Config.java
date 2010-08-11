@@ -57,4 +57,7 @@ public class Config
     public String GETPATHINFO()
         { return PATHINFO; }
 
+    public boolean getSymUnionDefaultGraph()
+        { return false; }
+
     }

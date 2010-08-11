@@ -1,6 +1,5 @@
 package uk.ac.ox.zoo.sparqlite;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
@@ -27,7 +26,6 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils;
 import com.hp.hpl.jena.tdb.TDB;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -38,13 +36,9 @@ public class EndpointTDB extends Endpoint {
 
     Dataset dataset = null;
 	IndexLARQ index = null;
+	
 	final Config config;
 	
-	static {
-		// required to make the generic dataset assembler work with tdb (0.7) graphs
-		AssemblerUtils.init();
-	}
-
     public EndpointTDB(HttpServletRequest request, ServletContext context) {
         this
             ( new Config( "", context.getRealPath("WEB-INF/tdb" + request.getPathInfo() +".ttl") ) 
@@ -55,7 +49,6 @@ public class EndpointTDB extends Endpoint {
     
 	public EndpointTDB( Config config, HttpServletRequest request, ServletContext context ) {
 	    this.config = config;
-		this.pathInfo = config.GETPATHINFO(); 
 	}
 	
 	public EndpointTDB( String storeDescFilePath ) {
@@ -70,7 +63,7 @@ public class EndpointTDB extends Endpoint {
 			log.trace("create query execution");
 			execution = QueryExecutionFactory.create(query, dataset);
 			// TODO: control UnionDefaultGraph setting with option
-			execution.getContext().set(TDB.symUnionDefaultGraph, false); // HERE
+			execution.getContext().set( TDB.symUnionDefaultGraph, config.getSymUnionDefaultGraph() ); 
 			if (index != null) {
 				log.trace("set larq index");
 				LARQ.setDefaultIndex(execution.getContext(), index);
@@ -97,13 +90,6 @@ public class EndpointTDB extends Endpoint {
 			try {
 				log.trace("close dataset");
 				dataset.close();
-//				log.trace("closing default model");
-//				dataset.getDefaultModel().close();
-//				for (Iterator it=dataset.listNames(); it.hasNext(); ) {
-//					String name = (String) it.next();
-//					log.trace("closing named model: "+name);
-//					dataset.getNamedModel(name).close();
-//				}
 			} catch (Throwable ex) {
 	        	String message = "unexpected error: "+ex.getLocalizedMessage();
 	        	throw new UnexpectedException(message, ex);
@@ -169,5 +155,8 @@ public class EndpointTDB extends Endpoint {
 	@Override public boolean exists() throws UnexpectedException {
 		return config.getStoreDescFileExists();
 	}
+
+    @Override public String getPathInfo()
+        { return config.GETPATHINFO(); }
 
 }

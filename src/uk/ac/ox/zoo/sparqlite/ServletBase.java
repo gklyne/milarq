@@ -21,7 +21,6 @@ public class ServletBase extends javax.servlet.http.HttpServlet implements javax
    
    
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response, Endpoint endpoint) throws ServletException, IOException {
-		
 		Processor re = new Processor(endpoint, getServletConfig());
 		re.exec(request, response);
 

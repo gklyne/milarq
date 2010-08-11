@@ -38,7 +38,7 @@ public class Processor {
 		Query query = null;
 		QueryExecution qe = null;
 		Object result = null;
-		info("begin processing request for path "+endpoint.pathInfo);
+		info( "begin processing request for path "+endpoint.getPathInfo() );
 		try {
 
 			start = new Date();
