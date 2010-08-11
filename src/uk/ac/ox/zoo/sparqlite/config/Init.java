@@ -4,10 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.hp.hpl.jena.assembler.Assembler;
-import com.hp.hpl.jena.assembler.Mode;
-import com.hp.hpl.jena.assembler.assemblers.AssemblerBase;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.BrokenException;
 import com.hp.hpl.jena.sparql.core.assembler.AssemblerUtils;
 import com.hp.hpl.jena.util.FileManager;
 
@@ -19,23 +18,12 @@ public class Init extends ServletBase
     
     private static final long serialVersionUID = 1L;
     
-    static class Sparqlite
-        {
-    
-        }
-    
-    static class InitAssembler extends AssemblerBase
-        {
-        @Override public Object open( Assembler a, Resource root, Mode mode )
-            {
-            return new Sparqlite();
-            }
-        }
+    protected static Sparqlite sparqlite = null;
     
     static 
         {
         AssemblerUtils.init();
-        Assembler.general.implementWith( Vocab.SPARQLITE, new InitAssembler() );
+        Assembler.general.implementWith( Vocab.SPARQLITE, new Sparqlite.Make() );
         }
 
     public void init()
@@ -47,8 +35,15 @@ public class Init extends ServletBase
         log.trace( "loading assembly file from " + realConfigName );
         Model config = FileManager.get().loadModel( realConfigName );
         Resource root = config.createResource( configRoot );
-        Sparqlite s = (Sparqlite) Assembler.general.open( root );
-        System.err.println( ">> " + s );
+        sparqlite = (Sparqlite) Assembler.general.open( root );
+        log.trace( "assembled sparqlite configuration object" );
         Config.setNamedConfig( "sparqlite", new Config( "<spoo>", "<init>" ) );
+        }
+    
+    public static Sparqlite getSparqlite()
+        {
+        if (sparqlite == null) throw new BrokenException
+            ( "attempt to get Sparqlite object, but no such object has been assembled" );
+        return sparqlite;
         }
     }

@@ -6,7 +6,16 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.hp.hpl.jena.assembler.Assembler;
+import com.hp.hpl.jena.assembler.AssemblerHelp;
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.NotFoundException;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
     Class for Sparqlite configuration
@@ -15,6 +24,9 @@ import com.hp.hpl.jena.shared.NotFoundException;
 */
 public class Config
     {
+    
+    Log log = LogFactory.getLog( Config.class );
+    
     public static Config neuxxtral = new Config( "<pathinfo>", "<neutral>" );
 
     protected final String storeDescFilePath;
@@ -60,4 +72,36 @@ public class Config
     public boolean getSymUnionDefaultGraph()
         { return false; }
 
+    public Dataset getDataset()
+        {
+        String sd = this.getStoreDescFilePath();
+        log.trace( "assembling dataset from " + sd );
+        Model model = FileManager.get().loadModel( sd );
+        model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
+        Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
+        log.trace( "dataset root is " + root );
+        return (Dataset) Assembler.general.open( root );
+        }
+    
+    public String getLARQIndexLocation()
+        {
+        String sd = this.getStoreDescFilePath();
+        log.trace( "assembling dataset from " + sd );
+        Model model = FileManager.get().loadModel( sd );
+        model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
+        Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
+        log.trace( "dataset root is " + root );
+        Statement locStatement = root.getProperty( Vocab.LARQ_Location );
+        if (locStatement == null)
+            {
+            log.trace( "no LARQ location provided" );
+            return null;
+            }
+        else
+            {
+            String location = locStatement.getString();
+            log.trace( "LARQ location " + location + " provided" );
+            return location;                   
+            }
+        }
     }

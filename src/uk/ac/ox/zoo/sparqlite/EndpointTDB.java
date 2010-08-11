@@ -17,18 +17,13 @@ import uk.ac.ox.zoo.sparqlite.config.Vocab;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
-import com.hp.hpl.jena.assembler.Assembler;
-import com.hp.hpl.jena.assembler.AssemblerHelp;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
-import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.tdb.TDB;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class EndpointTDB extends Endpoint {
 	
@@ -39,20 +34,26 @@ public class EndpointTDB extends Endpoint {
 	
 	final Config config;
 	
-    public EndpointTDB(HttpServletRequest request, ServletContext context) {
-        this
-            ( new Config( "", context.getRealPath("WEB-INF/tdb" + request.getPathInfo() +".ttl") ) 
-            , request
-            , context 
-            );
-    }
-    
-	public EndpointTDB( Config config, HttpServletRequest request, ServletContext context ) {
+	/**
+	    Create an endpoint with the given configuration.
+	*/
+	public EndpointTDB( Config config ) {
 	    this.config = config;
 	}
+
+	/**
+	    This is only here for testing; it was easier to gateway it in here
+	    than to change all the test entry points.
+	*/
+    public EndpointTDB( HttpServletRequest request, ServletContext context ) {
+        this( new Config( "", context.getRealPath("WEB-INF/tdb" + request.getPathInfo() +".ttl") ) );
+    }
 	
+	/**
+	    This also is only here for testing.
+	*/
 	public EndpointTDB( String storeDescFilePath ) {
-	    this.config = Config.fake(storeDescFilePath);
+	    this( Config.fake(storeDescFilePath) );
 	}
 
 	@Override public QueryExecution getQueryExecution(Query query) 
@@ -106,14 +107,16 @@ public class EndpointTDB extends Endpoint {
 		guardExists();
 		if (dataset == null) {
 			try {
-			    String sd = config.getStoreDescFilePath();
-			    log.trace( "assembling dataset and optional LARQ index from " + sd );
-			    Model model = FileManager.get().loadModel( sd );
-			    model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
-			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
-			    log.trace( "dataset root is " + root );
-			    dataset = (Dataset) Assembler.general.open( root );
-			    setLARQIndexIfPresent( root );				
+//			    String sd = config.getStoreDescFilePath();
+//			    log.trace( "assembling dataset and optional LARQ index from " + sd );
+//			    Model model = FileManager.get().loadModel( sd );
+//			    model.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );
+//			    Resource root = AssemblerHelp.singleRoot( model, Vocab.RDF_Dataset );
+//			    log.trace( "dataset root is " + root );
+			    dataset = config.getDataset(); // (Dataset) Assembler.general.open( root );
+//			    setLARQIndexIfPresent( root );			
+			    String location = config.getLARQIndexLocation();
+			    if (location != null) setLARQIndex( location );
 			} catch (Throwable ex) {
 	        	String message = "unexpected error: " + ex.getLocalizedMessage();
 	        	throw new UnexpectedException(message, ex);
@@ -121,19 +124,6 @@ public class EndpointTDB extends Endpoint {
 		}
 		return dataset;
 	}
-
-    private void setLARQIndexIfPresent( Resource root ) throws UnexpectedException
-        {
-        Statement locStatement = root.getProperty( Vocab.LARQ_Location );
-        if (locStatement == null)
-            log.trace( "no LARQ location provided" );
-        else
-            {
-            String location = locStatement.getString();
-            log.trace( "LARQ location " + location + " provided" );
-            setLARQIndex( location );			        
-            }
-        }
 
     private void setLARQIndex( String location ) throws UnexpectedException
         {
