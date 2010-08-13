@@ -47,4 +47,19 @@ public class Vocab
        root resource of the Sparqlite assembly file.
     */
     public static final String SPARQLITE_ROOT = "uk.ac.ox.zoo.sparqlite.root";
+
+    /**
+        Property of Sarqlite configuration objects giving a mapping fragment. 
+    */
+    public static final Property mapIf = p( "http://purl.org/net/sparqlite/vocab#mapIf" );
+
+    /**
+        Property of mapIf objects giving the match regexp. 
+    */
+    public static final Property matches = p( "http://purl.org/net/sparqlite/vocab#matches" );
+
+    /**
+        Property of mapIf objects giving a replacement string. 
+    */
+    public static final Property replacement = p( "http://purl.org/net/sparqlite/vocab#replacement" );
     }
