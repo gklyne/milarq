@@ -30,30 +30,59 @@ public class Sparqlite
                     Literal r = getUniqueLiteral( f, Vocab.replacement );
                     Pattern RE = Pattern.compile( m.getLexicalForm() );
                     ts.add( new ConditionalTransform( RE, r.getLexicalForm() ) );
-                    } // TODO: else throw some exception
+                    } 
+                else 
+                    throw new RuntimeException( "the object " + v + " of a mapIf must be a Resouce" );
                 }
-            return new Sparqlite( ts );
+            return new Sparqlite( root, ts );
             }
         }
     
     private final List<ConditionalTransform> transforms;
+    private final Resource root;
+    
+    private static final Resource missingRoot = 
+        ModelFactory.createDefaultModel().createResource( "eh:/NoAssemblyRoot" );
     
     public Sparqlite()
         { this( new ConditionalTransform[] {} ); }
     
     public Sparqlite( ConditionalTransform [] transforms )
-        { this.transforms = Arrays.asList( transforms ); }
+        { this( Arrays.asList( transforms ) ); }
 
     public Sparqlite( List<ConditionalTransform> transforms )
-        { this.transforms = transforms; }
+        {
+        this( missingRoot, transforms ); 
+        }
 
-    // TODO this should be controlled by the specification file
+    public Sparqlite( Resource root, List<ConditionalTransform> transforms )
+        { 
+        this.root = root;
+        this.transforms = transforms; 
+        }
+
     public Config getConfig( String pathInfo, ServletContext context )
         {
-        String storeDescFilePath = context.getRealPath( "WEB-INF/tdb" + pathInfo + ".ttl" );
-        return new Config( pathInfo, storeDescFilePath );
+        String loc = pathToLocation( pathInfo );
+        if (looksLikeURI( loc ))
+            {
+            Resource r = root.getModel().createResource( loc );
+            if (!root.hasProperty( Vocab.sparqliteDataset, r )) 
+                throw new RuntimeException( "the dataset resource " + r + " for " + pathInfo + " is not a dataset object of " + root );
+            return new ConfigByModel( pathInfo, r );
+            }
+        else
+            {
+            String storeDescFilePath = context.getRealPath( loc );
+            return new ConfigByFile( pathInfo, storeDescFilePath );
+            }
         }
     
+    private boolean looksLikeURI( String loc )
+        {
+        return loc.matches( "^https?://.*" );
+        }
+
     public String pathToLocation( String pathInfo )
         {
         for (ConditionalTransform t: transforms)

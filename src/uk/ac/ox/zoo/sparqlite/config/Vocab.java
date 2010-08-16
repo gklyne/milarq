@@ -62,4 +62,9 @@ public class Vocab
         Property of mapIf objects giving a replacement string. 
     */
     public static final Property replacement = p( "http://purl.org/net/sparqlite/vocab#replacement" );
+
+    /**
+        Property of Sparqlite object that refers to the dataset configuration
+    */
+    public static final Property sparqliteDataset = p( "http://purl.org/net/sparqlite/vocab#dataset" );
     }

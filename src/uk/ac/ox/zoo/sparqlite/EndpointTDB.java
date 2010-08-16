@@ -113,14 +113,14 @@ public class EndpointTDB extends Endpoint {
 		log.trace("exists guard condition");
 		if (!exists()) 
 		    throw new EndpointNotFoundException
-		        ("no store description file found for path: " + config.getStoreDescFilePath() );
+		        ("no store description file found for path: " + config.getStoreName() );
 	}
 	
 	@Override public boolean exists() throws UnexpectedException {
-		return config.getStoreDescFileExists();
+		return config.getStoreExists();
 	}
 
     @Override public String getPathInfo()
-        { return config.GETPATHINFO(); }
+        { return config.getPathInfo(); }
 
 }
