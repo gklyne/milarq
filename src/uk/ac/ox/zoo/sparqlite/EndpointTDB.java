@@ -10,6 +10,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
+import uk.ac.ox.zoo.sparqlite.config.Vocab;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
@@ -46,6 +47,7 @@ public class EndpointTDB extends Endpoint {
 			execution = QueryExecutionFactory.create(query, dataset);
 			// TODO: control UnionDefaultGraph setting with option
 			execution.getContext().set( TDB.symUnionDefaultGraph, config.getSymUnionDefaultGraph() ); 
+			execution.getContext().set( Vocab.CompositeIndexDirectory, config.getCompositeIndexDirectory() );
 			if (index != null) {
 				log.trace("set larq index");
 				LARQ.setDefaultIndex(execution.getContext(), index);

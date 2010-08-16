@@ -1,6 +1,7 @@
 package uk.ac.ox.zoo.sparqlite.config;
 
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.util.Symbol;
 
 /**
     Vocabulary constants for configuration. Should probably be done
@@ -67,4 +68,12 @@ public class Vocab
         Property of Sparqlite object that refers to the dataset configuration
     */
     public static final Property sparqliteDataset = p( "http://purl.org/net/sparqlite/vocab#dataset" );
+    
+    public static final Property compositeIndexDirectory = p( "http://purl.org/net/sparqlite/vocab#compositeIndexDirectory" );
+
+    /**
+        Key for getting composite index directory out of the execution context. This may
+        not be the best class for it, but it is a configuration name.
+    */
+    public static final Symbol CompositeIndexDirectory = Symbol.create( "com.epimorphics.milarq.indexes" );
     }

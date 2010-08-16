@@ -5,6 +5,8 @@ import java.util.*;
 
 import org.openjena.atlas.lib.NotImplemented;
 
+import uk.ac.ox.zoo.sparqlite.config.Vocab;
+
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.impl.LiteralLabelFactory;
 import com.hp.hpl.jena.query.QueryBuildException;
@@ -19,11 +21,9 @@ import com.hp.hpl.jena.sparql.pfunction.PropFuncArgType;
 import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionEval;
 import com.hp.hpl.jena.sparql.serializer.SerializationContext;
 import com.hp.hpl.jena.sparql.util.IndentedWriter;
-import com.hp.hpl.jena.sparql.util.Symbol;
 
 public class compositeIndex extends PropertyFunctionEval
 	{
-
 	public compositeIndex() 
 		{
 		super(PropFuncArgType.PF_ARG_SINGLE, PropFuncArgType.PF_ARG_LIST);
@@ -61,12 +61,12 @@ public class compositeIndex extends PropertyFunctionEval
 	     enableIndex( execCxt, term.getLiteralLexicalForm() );
 	     }
 
-	private final Symbol CompositeIndexDirectory = Symbol.create( "com.epimorphics.milarq.indexes" );
-	
 	private void enableIndex( ExecutionContext c, String term ) 
 		{
-		indexDir = c.getContext().getAsString( CompositeIndexDirectory );
-		if (indexDir == null) indexDir = "/home/chris/MILARQ/extras/indexes";
+		String cid = c.getContext().getAsString( Vocab.CompositeIndexDirectory );
+		if (cid == null)
+		    throw new QueryBuildException( "no value supplied for composite index directory" );
+        indexDir = cid;
 		indexTerm = term;
 		}
 

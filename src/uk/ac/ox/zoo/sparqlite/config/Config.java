@@ -34,6 +34,8 @@ public abstract class Config
     
     public abstract boolean getStoreExists();
 
+    public abstract String getCompositeIndexDirectory();
+
     /**
         Utility method providing some assemblerish
         functionality -- given a root resource, deliver the LARQ index

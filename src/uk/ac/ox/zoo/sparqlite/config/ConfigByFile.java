@@ -17,10 +17,10 @@ public class ConfigByFile extends Config
     public ConfigByFile( String PATHINFO, String storeDescFilePath )
         { super( PATHINFO ); this.storeDescFilePath = storeDescFilePath; }
 
-    public String getStoreName()
+    @Override public String getStoreName()
         { return storeDescFilePath; }
     
-    public boolean getStoreExists()
+    @Override public boolean getStoreExists()
         { return new File( storeDescFilePath ).exists(); }
     
     @Override public Dataset getDataset()
@@ -49,12 +49,13 @@ public class ConfigByFile extends Config
         return description;
         }
     
-    public String getLARQIndexLocation()
+    @Override public String getLARQIndexLocation()
         {
         Resource root = getDescriptionRoot();
         log.trace( "dataset root is " + root );
         return getLARQIndexLocation( root );
         }
-    
 
+    @Override public String getCompositeIndexDirectory()
+        { return null; }
     }
