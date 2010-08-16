@@ -21,8 +21,8 @@ export TOOLS=./tools
 # case you should probably keep a clean copy of the original
 # source somewhere.
 
-export SOURCE_TDB=tdb-augmented 
-export TARGET_TDB=tdb-augmented
+export SOURCE_TDB=claros-tdb
+export TARGET_TDB=claros-tdb
 
 #
 # the directory in which the term/date index files will be
@@ -48,7 +48,7 @@ export TEMPLATES=./templates
 # working directory for intermediate files; default is current
 # directory. edit as it please you.
 #
-export WORK=.
+export WORK=work
 
 # -------------------------------------------------------------
 # end of settable paramters; should now do some checks.
@@ -80,7 +80,8 @@ function generate_has-term_triples()
 }
 
 #
-#
+# generate the triples that put the type of a subject at the top
+# level, ie as direct properties of it.
 #
 function generate_has-type_triples()
     {
@@ -102,7 +103,7 @@ function generate_time-span_triples()
     tdbquery --query $TOOLS/time_span.sparql --loc $SOURCE_TDB \
         | sed -r \
             -e 's/gYear/integer/g' \
-            -e 's/"[^"]*(-?[0-9][0-9][0-9][0-9]*)[^"]*"/"\1"/' \
+            -e 's/"[^-"]*(-?[0-9][0-9][0-9][0-9])[^"]*"/"\1"/' \
             -e 's/""/"9999"/g' \
             > $WORK/s-notbefore-notafter.ttl
     }
