@@ -13,7 +13,7 @@ import com.hp.hpl.jena.rdf.model.*;
 */
 public abstract class Config
     {
-    protected Log log = LogFactory.getLog( Config.class );
+    protected static final Log log = LogFactory.getLog( Config.class );
     
     protected final String pathInfo;
 

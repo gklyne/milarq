@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.hp.hpl.jena.assembler.Assembler;
 import com.hp.hpl.jena.assembler.Mode;
 import com.hp.hpl.jena.assembler.assemblers.AssemblerBase;
@@ -16,6 +19,8 @@ import com.hp.hpl.jena.rdf.model.*;
 */
 public class Sparqlite
     {      
+    static final protected Log log = LogFactory.getLog( Config.class );
+    
     public static class Make extends AssemblerBase
         {
         @Override public Object open( Assembler a, Resource root, Mode mode )
@@ -34,6 +39,7 @@ public class Sparqlite
                 else 
                     throw new RuntimeException( "the object " + v + " of a mapIf must be a Resouce" );
                 }
+            log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
             return new Sparqlite( root, ts );
             }
         }
