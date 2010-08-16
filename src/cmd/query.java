@@ -8,6 +8,7 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.util.FileManager;
 
 import util.CommandArgs;
 
@@ -20,8 +21,9 @@ public class query
         CommandArgs a = CommandArgs.parse( args );
         String q = a.getOnly( "-query" );
         String t = a.getOnly( "-tdb" );
+        String p = a.getOptional( "-prefixes" );
         Dataset m = TDBFactory.createDataset( t );
-        String queryString = timings.PREFIXES + "\n" + q;
+        String queryString = makeQueryString( p, q );
         // System.err.println( ">> " + queryString );
         Query query = QueryFactory.create( queryString, Syntax.syntaxARQ );
         QueryExecution qexec = QueryExecutionFactory.create( query, m );
@@ -38,6 +40,27 @@ public class query
                 }
             System.out.println();
             }
+        }
+
+    /**
+        make a SPARQL query string. p is the name of a prefixes file, or
+        null if there isn't one, in which case default prefixes are applied.
+        q is a literal query, or @filename containing a query, or @stdin: for
+        a query from stdin.
+    */
+    private static String makeQueryString( String p, String q )
+        {
+        FileManager fm = FileManager.get();
+        String prefixes = p == null 
+            ? timings.PREFIXES 
+            : fm.readWholeFileAsUTF8( p )
+            ;
+        String query = 
+            q.equals( "@stdin:" ) ? fm.readWholeFileAsUTF8( System.in )
+            : q.startsWith( "@" ) ? fm.readWholeFileAsUTF8( q.substring(1) ) 
+            : q
+            ;
+        return prefixes + "\n" + query;
         }
 
     private static String asField( RDFNode n )

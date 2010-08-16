@@ -69,7 +69,7 @@ public class CommandArgs
         	{
         	if (arg.startsWith("-"))
         		{
-        		String trimmed = arg.replaceFirst( "^-+", "" );
+        		String trimmed = arg.replaceFirst( "^-+", "-" );
         		int eq = trimmed.indexOf('=');
         		if (eq < 0)
         			key = result.declare(trimmed);
