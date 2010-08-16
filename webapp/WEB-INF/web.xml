@@ -19,7 +19,11 @@
        <servlet-class>uk.ac.ox.zoo.sparqlite.config.Init</servlet-class>
        <init-param>
             <param-name>uk.ac.ox.zoo.sparqlite.config</param-name>
-            <param-value>sparqlite-assembly.ttl</param-value>
+            <param-value>WEB-INF/sparqlite-assembly.ttl</param-value>
+        </init-param>
+       <init-param>
+            <param-name>uk.ac.ox.zoo.sparqlite.root</param-name>
+            <param-value>http://purl.org/net/sparqlite/vocab#root</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
