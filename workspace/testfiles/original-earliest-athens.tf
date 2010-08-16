@@ -1,8 +1,8 @@
 !query original earliest athens query
 -groups slow example
 -count 4
--larq ../claros_demo_server/WebContent/WEB-INF/data/combined/lucene/ 
--tdb tdb-augmented
+-larq lucene 
+-tdb claros-tdb
 -label orig-early-athens-query
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

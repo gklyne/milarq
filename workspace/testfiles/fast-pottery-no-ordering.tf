@@ -1,8 +1,8 @@
 !query fast type "Pottery", then fast dates, no ordering
 -groups fast
 -count 4
--larq ../claros_demo_server/WebContent/WEB-INF/data/combined/lucene/ 
--tdb augmented-tdb
+-larq lucene 
+-tdb claros-tdb
 -label pottery-fast-dates
 
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

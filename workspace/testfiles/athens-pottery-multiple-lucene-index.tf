@@ -1,8 +1,8 @@
 !query dated athens pottery using multiple Lucene index
 -groups fast example
 -count 4
--larq larq 
--tdb augmented-tdb
+-larq lucene 
+-tdb claros-tdb
 -label multiple-lucene-index
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
