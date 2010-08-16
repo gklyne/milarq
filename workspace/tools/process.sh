@@ -164,7 +164,7 @@ function produce_performance_report()
     {
     echo :: producing performance report ::
     $JAVA cmd.weave -from $WORK/performance-data.ttl -template $TEMPLATES/for-primary-example.t.html \
-        > example-performance-report.html
+        > $WORK/example-performance-report.html
     }
 
 #
