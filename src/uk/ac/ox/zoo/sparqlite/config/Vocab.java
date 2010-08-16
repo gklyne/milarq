@@ -69,6 +69,9 @@ public class Vocab
     */
     public static final Property sparqliteDataset = p( "http://purl.org/net/sparqlite/vocab#dataset" );
     
+    /**
+        Property pointing to the index file for composite indexes.
+    */
     public static final Property compositeIndexDirectory = p( "http://purl.org/net/sparqlite/vocab#compositeIndexDirectory" );
 
     /**
