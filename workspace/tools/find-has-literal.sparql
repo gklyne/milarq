@@ -1,0 +1,15 @@
+prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+prefix pf:      <http://jena.hpl.hp.com/ARQ/property#>
+prefix arqfn:   <java:uk.ac.ox.zoo.sparqlite.> 
+prefix graph:   <http://purl.org/NET/Claros/graph/> 
+prefix bz:      <http://www.beazley.ox.ac.uk/record/> 
+prefix xsd:     <http://www.w3.org/2001/XMLSchema#> 
+prefix tf:      <http://epimorphics.com/vocabularies/tf/> 
+prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix crm:     <http://purl.org/NET/crm-owl#> 
+prefix claros:  <http://purl.org/NET/Claros/vocab#> 
+
+select ?s ?l where
+{ graph ?g
+  { ?s claros:hasLiteral ?l filter (?l != "") }
+}
