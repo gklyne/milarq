@@ -27,8 +27,8 @@ LIMIT 1
 !query athens by property function, no ordering
 -groups slow example
 -count 4
--larq ../claros_demo_server/WebContent/WEB-INF/data/combined/lucene/
--tdb augmented-tdb
+-larq lucene
+-tdb claros-tdb
 -label no-order-textMatch
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

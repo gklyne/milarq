@@ -163,7 +163,7 @@ function run_performance_queries()
 function produce_performance_report()
     {
     echo :: producing performance report ::
-    $JAVA cmd.weavil -from $WORK/performance-data.ttl -template $TEMPLATES/for-primary-example.t.html \
+    $JAVA cmd.weave -from $WORK/performance-data.ttl -template $TEMPLATES/for-primary-example.t.html \
         > example-performance-report.html
     }
 

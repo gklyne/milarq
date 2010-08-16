@@ -1,10 +1,12 @@
-
 syntax: regexp
 ^build/classes$
 syntax: regexp
 ^webapp/WEB-INF/data$
 syntax: regexp
-^webapp/WEB-INF/data/lucene.*$
-
+^workspace/lucene.*$
 syntax: regexp
-^webapp/WEB-INF/data/lucene$
+^workspace/indexes.*$
+syntax: regexp
+^workspace/claros-tdb.*$
+syntax: regexp
+^workspace/work.*$
