@@ -21,7 +21,7 @@ public class CommandConfig
     public void display(PrintStream out)
     	{
     	out.println( "label:        " + label );
-    	out.println( "largIndex:    " + larqIndex );
+    	out.println( "larqIndex:    " + larqIndex );
     	out.println( "tdb location: " + TDBloc );
     	out.println( "query arg:    " + queryArg );
     	out.println( "#repetitions: " + limit );
