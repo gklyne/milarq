@@ -1,0 +1,7 @@
+This (draft) document describes how to configure a revised Sparqlite
+system to use augmented indexes for faster lookup.
+
+The revised configuration has required extensive changes to the configuration
+aspects of Sparqlite -- it is not just a drop-in solution. However the code
+is based on sparqlite-20090309-0.4-claros and passes the same tests.
+
