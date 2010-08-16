@@ -1,4 +1,4 @@
-package uk.ac.ox.zoo.sparqlite.propertyfunctions;
+package propertyfunctions;
 
 import com.hp.hpl.jena.query.larq.HitLARQ;
 import com.hp.hpl.jena.sparql.lib.iterator.IteratorTruncate ;

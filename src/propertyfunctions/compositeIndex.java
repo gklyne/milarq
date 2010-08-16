@@ -1,4 +1,4 @@
-package uk.ac.ox.zoo.sparqlite.propertyfunctions;
+package propertyfunctions;
 
 import java.io.*;
 import java.util.*;
