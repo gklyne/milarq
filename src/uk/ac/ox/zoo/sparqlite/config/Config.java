@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.util.Context;
+import com.hp.hpl.jena.tdb.TDB;
 
 /**
     Class for Sparqlite configuration.
@@ -16,9 +18,10 @@ public abstract class Config
     protected static final Log log = LogFactory.getLog( Config.class );
     
     protected final String pathInfo;
+    protected final IndexMap indexMap;
 
-    public Config( String pathInfo )
-        { this.pathInfo = pathInfo; }
+    public Config( String pathInfo, IndexMap indexMap )
+        { this.pathInfo = pathInfo; this.indexMap = indexMap; }
     
     public String getPathInfo()
         { return pathInfo; }
@@ -55,5 +58,12 @@ public abstract class Config
             log.trace( "LARQ location " + location + " provided" );
             return location;                   
             }
+        }
+
+    public void setContext( Context context )
+        {
+        context.set( TDB.symUnionDefaultGraph, false ); 
+        context.set( Vocab.CompositeIndexDirectory, getCompositeIndexDirectory() );
+        indexMap.setContext( context );        
         }
     }

@@ -15,7 +15,13 @@ public class ConfigByFile extends Config
     protected Model description;
     
     public ConfigByFile( String PATHINFO, String storeDescFilePath )
-        { super( PATHINFO ); this.storeDescFilePath = storeDescFilePath; }
+        { this( PATHINFO, new IndexMap(), storeDescFilePath );  }    
+    
+    public ConfigByFile( String PATHINFO, IndexMap indexMap, String storeDescFilePath )
+        { 
+        super( PATHINFO, indexMap ); 
+        this.storeDescFilePath = storeDescFilePath; 
+        }
 
     @Override public String getStoreName()
         { return storeDescFilePath; }

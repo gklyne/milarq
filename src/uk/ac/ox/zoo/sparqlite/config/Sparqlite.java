@@ -23,7 +23,34 @@ public class Sparqlite
     
     public static class Make extends AssemblerBase
         {
+        
         @Override public Object open( Assembler a, Resource root, Mode mode )
+            {
+            List<ConditionalTransform> ts = getTransformsFor( root );
+            IndexMap im = getIndexMapFor( root );
+            log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
+            return new Sparqlite( root, ts, im );
+            }
+
+        private IndexMap getIndexMapFor( Resource root )
+            {
+            IndexMap im = new IndexMap();
+            for (RDFNode v: root.listProperties( Vocab.index ).mapWith( Statement.Util.getObject ).toList())
+                {
+                if (v.isResource())
+                    {
+                    Resource f = (Resource) v;
+                    Literal p = getUniqueLiteral( f, Vocab.forPredicate );
+                    Literal d = getUniqueLiteral( f, Vocab.useDirectory );
+                    im.put( p.getLexicalForm(), d.getLexicalForm() );
+                    }
+                else 
+                    throw new RuntimeException( "the object " + v + " of an index must be a Resource" );
+                }
+            return im;
+            }
+
+        private List<ConditionalTransform> getTransformsFor( Resource root )
             {
             List<ConditionalTransform> ts = new ArrayList<ConditionalTransform>();
             for (RDFNode v: root.listProperties( Vocab.mapIf ).mapWith( Statement.Util.getObject ).toList())
@@ -37,15 +64,15 @@ public class Sparqlite
                     ts.add( new ConditionalTransform( RE, r.getLexicalForm() ) );
                     } 
                 else 
-                    throw new RuntimeException( "the object " + v + " of a mapIf must be a Resouce" );
+                    throw new RuntimeException( "the object " + v + " of a mapIf must be a Resource" );
                 }
-            log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
-            return new Sparqlite( root, ts );
+            return ts;
             }
         }
     
-    private final List<ConditionalTransform> transforms;
     private final Resource root;
+    private final IndexMap indexMap;
+    private final List<ConditionalTransform> transforms;
     
     private static final Resource missingRoot = 
         ModelFactory.createDefaultModel().createResource( "eh:/NoAssemblyRoot" );
@@ -58,12 +85,13 @@ public class Sparqlite
 
     public Sparqlite( List<ConditionalTransform> transforms )
         {
-        this( missingRoot, transforms ); 
+        this( missingRoot, transforms, new IndexMap() ); 
         }
 
-    public Sparqlite( Resource root, List<ConditionalTransform> transforms )
+    public Sparqlite( Resource root, List<ConditionalTransform> transforms, IndexMap indexMap )
         { 
         this.root = root;
+        this.indexMap = indexMap;
         this.transforms = transforms; 
         }
 
@@ -75,12 +103,12 @@ public class Sparqlite
             Resource r = root.getModel().createResource( loc );
             if (!root.hasProperty( Vocab.sparqliteDataset, r )) 
                 throw new RuntimeException( "the dataset resource " + r + " for " + pathInfo + " is not a dataset object of " + root );
-            return new ConfigByModel( pathInfo, r );
+            return new ConfigByModel( pathInfo, indexMap, r );
             }
         else
             {
             String storeDescFilePath = context.getRealPath( loc );
-            return new ConfigByFile( pathInfo, storeDescFilePath );
+            return new ConfigByFile( pathInfo, indexMap, storeDescFilePath );
             }
         }
     

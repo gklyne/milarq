@@ -20,6 +20,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
+import com.hp.hpl.jena.sparql.util.Context;
 import com.hp.hpl.jena.tdb.TDB;
 
 public class EndpointTDB extends Endpoint {
@@ -45,12 +46,11 @@ public class EndpointTDB extends Endpoint {
 		try {
 			log.trace("create query execution");
 			execution = QueryExecutionFactory.create(query, dataset);
-			// TODO: control UnionDefaultGraph setting with option
-			execution.getContext().set( TDB.symUnionDefaultGraph, config.getSymUnionDefaultGraph() ); 
-			execution.getContext().set( Vocab.CompositeIndexDirectory, config.getCompositeIndexDirectory() );
+			Context context = execution.getContext();
+			config.setContext( context );
 			if (index != null) {
 				log.trace("set larq index");
-				LARQ.setDefaultIndex(execution.getContext(), index);
+				LARQ.setDefaultIndex(context, index);
 			}
 		} catch (Throwable ex) {
         	String message = "unexpected error: "+ex.getLocalizedMessage();

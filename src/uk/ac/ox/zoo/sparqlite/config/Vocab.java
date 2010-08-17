@@ -79,4 +79,14 @@ public class Vocab
         not be the best class for it, but it is a configuration name.
     */
     public static final Symbol CompositeIndexDirectory = Symbol.create( "com.epimorphics.milarq.indexes" );
+
+    /**
+        Property which tells the assembler which index directory is associated with each
+        property function.
+    */
+    public static final Property index = p( "http://purl.org/net/sparqlite/vocab#indexDirectory" );
+
+    public static final Property forPredicate = p( "http://purl.org/net/sparqlite/vocab#forPredicate" );
+
+    public static final Property useDirectory = p( "http://purl.org/net/sparqlite/vocab#indexName" );;
     }
