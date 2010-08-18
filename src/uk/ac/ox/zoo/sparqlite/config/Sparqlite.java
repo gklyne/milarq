@@ -23,7 +23,6 @@ public class Sparqlite
     
     public static class Make extends AssemblerBase
         {
-        
         @Override public Object open( Assembler a, Resource root, Mode mode )
             {
             List<ConditionalTransform> ts = getTransformsFor( root );
@@ -95,7 +94,7 @@ public class Sparqlite
         this.transforms = transforms; 
         }
 
-    public Config getConfig( String pathInfo, ServletContext context )
+    public Config getConfig( String pathInfo, PathMapper context )
         {
         String loc = pathToLocation( pathInfo );
         if (looksLikeURI( loc ))
@@ -107,7 +106,7 @@ public class Sparqlite
             }
         else
             {
-            String storeDescFilePath = context.getRealPath( loc );
+            String storeDescFilePath = context.mapPath( loc );
             return new ConfigByFile( pathInfo, indexMap, storeDescFilePath );
             }
         }

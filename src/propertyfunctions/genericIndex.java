@@ -91,10 +91,10 @@ public class genericIndex extends PropertyFunctionEval
 
             private Node stringToNode( String s )
                 {
-                String spelling = s.replaceAll( "\\C", "," );
+                String spelling = s.replaceAll( "\\\\C", "," );
                 if (spelling.startsWith( "<" ))
                     return Node.createURI( spelling.substring( 1, spelling.length() - 1 ) );
-                else if (spelling.startsWith( "-?[0-9]" ))
+                else if (spelling.matches( "^-?[0-9].*" ))
                     return Node.createLiteral( LiteralLabelFactory.create( Integer.parseInt( spelling ) ) );
                 else
                     {

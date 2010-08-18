@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
+import uk.ac.ox.zoo.sparqlite.config.PathMapper;
 import uk.ac.ox.zoo.sparqlite.config.Init;
 
 
@@ -47,7 +48,9 @@ import uk.ac.ox.zoo.sparqlite.config.Init;
 	} 
 	
 	protected void doCommon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    Config c = Init.getSparqlite().getConfig( request.getPathInfo(), getServletContext() ); 
+	    String pathInfo = request.getPathInfo();
+        PathMapper pathMapper = PathMapper.Create.from( getServletContext() );
+        Config c = Init.getSparqlite().getConfig( pathInfo, pathMapper ); 
 		Endpoint endpoint = new EndpointTDB( c );
 		doCommon(request, response, endpoint); 
 	}  	  	  	  
