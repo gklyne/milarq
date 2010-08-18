@@ -3,15 +3,17 @@ package uk.ac.ox.zoo.sparqlite.config;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import sun.security.action.GetLongAction;
 
 import com.hp.hpl.jena.assembler.Assembler;
 import com.hp.hpl.jena.assembler.Mode;
 import com.hp.hpl.jena.assembler.assemblers.AssemblerBase;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionRegistry;
 
 /**
     Sparqlite configuration object and an assembler for it. 
@@ -27,8 +29,31 @@ public class Sparqlite
             {
             List<ConditionalTransform> ts = getTransformsFor( root );
             IndexMap im = getIndexMapFor( root );
+            PropertyMap pf = getPropertyMap( root );
             log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
-            return new Sparqlite( root, ts, im );
+            return new Sparqlite( root, ts, im, pf );
+            }
+
+        private PropertyMap getPropertyMap( Resource root )
+            {
+            PropertyMap pm = new PropertyMap();
+            for (RDFNode x: root.listProperties( Vocab.register ).mapWith( Statement.Util.getObject ).toList())
+                {
+                if (x.isResource())
+                    {
+                    Resource f = (Resource) x;
+                    Literal a = getUniqueLiteral( f, Vocab.forPredicate );
+                    Literal b = getUniqueLiteral( f, Vocab.useClass );
+                    pm.put( a.getLexicalForm(), classNamed( b.getLexicalForm() ) );
+                    }
+                }
+            return pm;
+            }
+
+        private Class<?> classNamed( String name )
+            {
+            try { return Class.forName( name ); }
+            catch (ClassNotFoundException e) { throw new WrappedException( e ); }
             }
 
         private IndexMap getIndexMapFor( Resource root )
@@ -72,6 +97,21 @@ public class Sparqlite
     private final Resource root;
     private final IndexMap indexMap;
     private final List<ConditionalTransform> transforms;
+    private final PropertyMap propertyFunctions;
+    
+    static class PropertyMap
+        {
+        private final Map<String, Class<?>> map = new HashMap<String, Class<?>>();
+        
+        public Set<String> keySet()
+            { return map.keySet(); }
+        
+        public void put( String predicate, Class<?> c )
+            { map.put( predicate, c ); }
+
+        public Class<?> get( String key )
+            { return map.get( key ); }
+        }
     
     private static final Resource missingRoot = 
         ModelFactory.createDefaultModel().createResource( "eh:/NoAssemblyRoot" );
@@ -84,14 +124,15 @@ public class Sparqlite
 
     public Sparqlite( List<ConditionalTransform> transforms )
         {
-        this( missingRoot, transforms, new IndexMap() ); 
+        this( missingRoot, transforms, new IndexMap(), new PropertyMap() ); 
         }
 
-    public Sparqlite( Resource root, List<ConditionalTransform> transforms, IndexMap indexMap )
+    public Sparqlite( Resource root, List<ConditionalTransform> transforms, IndexMap indexMap, PropertyMap propertyFunctions )
         { 
         this.root = root;
         this.indexMap = indexMap;
         this.transforms = transforms; 
+        this.propertyFunctions = propertyFunctions;
         }
 
     public Config getConfig( String pathInfo, PathMapper context )
@@ -126,4 +167,14 @@ public class Sparqlite
 
     public Set<ConditionalTransform> getTransforms()
         { return new HashSet<ConditionalTransform>( transforms ); }
+
+    /**
+        Register all the property functions that are described by this
+        Sparqlite object.
+    */
+    public void registerPropertyFunctions()
+        {
+        for (String predicate: propertyFunctions.keySet())
+            PropertyFunctionRegistry.get().put( predicate, propertyFunctions.get( predicate ) );
+        }
     }

@@ -2,11 +2,8 @@ package cmd;
 
 import java.io.*;
 
-import propertyfunctions.genericIndex;
-
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionRegistry;
 import com.hp.hpl.jena.sparql.util.Symbol;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -31,10 +28,11 @@ public class generic_indexing_example
     
     public void run() throws IOException
         {
-        PropertyFunctionRegistry.get().put( "eh:/my-property-function", genericIndex.class );
+//        PropertyFunctionRegistry.get().put( "eh:/my-property-function", genericIndex.class );
         createIndexFile();
         Dataset d = createTDB();
         Sparqlite s = createSparqlite();
+        s.registerPropertyFunctions();
         Config c = s.getConfig( "fakePathInfo", PathMapper.Create.usePrefix( "MUN" ) );
         String queryString =
             "select * where"
@@ -85,17 +83,22 @@ public class generic_indexing_example
         Resource root = m.createResource( "eh:/" );
         Resource mapIf = m.createResource();
         Resource ds = m.createResource( "http://example.com/x/replacement/fakePathInfo" );
+        Resource r = m.createResource( "eh:/registration" );
         Property LOC = m.createProperty( "http://jena.hpl.hp.com/2008/tdb#location" );
         root
             .addProperty( RDF.type, Vocab.SPARQLITE )
-            .addProperty( Vocab.compositeIndexDirectory, directory )
             .addProperty( Vocab.mapIf, mapIf )
             .addProperty( Vocab.sparqliteDataset, ds )
+            .addProperty( Vocab.compositeIndexDirectory, directory )
+            .addProperty( Vocab.register, r )
             ;
         ds
             .addProperty( RDF.type, Vocab.TDB_Dataset )
             .addProperty( LOC, directory + "/" + TDB_DIRECTORY )
             ;
+        r
+            .addProperty( Vocab.forPredicate, "eh:/my-property-function" )
+            .addProperty( Vocab.useClass, propertyfunctions.genericIndex.class.getName() );
         mapIf
             .addProperty( Vocab.matches, ".*" )
             .addProperty( Vocab.replacement, "http://example.com/x/replacement/%s" )

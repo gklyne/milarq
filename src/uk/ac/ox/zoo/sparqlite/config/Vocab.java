@@ -88,5 +88,9 @@ public class Vocab
 
     public static final Property forPredicate = p( "http://purl.org/net/sparqlite/vocab#forPredicate" );
 
-    public static final Property useDirectory = p( "http://purl.org/net/sparqlite/vocab#indexName" );;
+    public static final Property useDirectory = p( "http://purl.org/net/sparqlite/vocab#useDirectory" );
+
+    public static final Property useClass = p( "http://purl.org/net/sparqlite/vocab#useClass" );
+
+    public static final Property register = p( "http://purl.org/net/sparqlite/vocab#reghister" );
     }

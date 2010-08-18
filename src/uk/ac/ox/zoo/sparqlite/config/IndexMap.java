@@ -19,15 +19,27 @@ public class IndexMap
     
     private final Map<String, String> map = new HashMap<String, String>();
     
+    /**
+        Answer the directory path associated with the given predicate,
+        or null if there isn't one.
+    */
     public String getDirectoryFor( String predicate )
         { return map.get( predicate ); }
     
+    /**
+        Associate the given directory with the given predicate, so that
+        getDirectory(predicate) will deliver directory.
+    */
     public void put( String predicate, String directory )
         { map.put( predicate, directory ); }
 
-    public void setContext( Context context )
+    /**
+        Set a symbol in the ARQ context c for each predicate in the
+        map, with value the corresponding directory.
+    */
+    public void setContext( Context c )
         {
         for (String predicate: map.keySet())
-            context.set( Symbol.create( predicate ), map.get( predicate ) );
+            c.set( Symbol.create( predicate ), map.get( predicate ) );
         }
     }
