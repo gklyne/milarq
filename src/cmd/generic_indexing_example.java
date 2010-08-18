@@ -4,7 +4,6 @@ import java.io.*;
 
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.util.Symbol;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -13,6 +12,7 @@ import util.CommandArgs;
 
 public class generic_indexing_example
     {
+    private static final String MYPF = "eh:/my-property-function";
     private static final String INDEX_FILE = "example.spoo";
     private static final String TDB_DIRECTORY = "example.tdb";
 
@@ -28,7 +28,6 @@ public class generic_indexing_example
     
     public void run() throws IOException
         {
-//        PropertyFunctionRegistry.get().put( "eh:/my-property-function", genericIndex.class );
         createIndexFile();
         Dataset d = createTDB();
         Sparqlite s = createSparqlite();
@@ -37,12 +36,13 @@ public class generic_indexing_example
         String queryString =
             "select * where"
             + "\n{"
-            + "\n?s <eh:/my-property-function> ('!IF!' ?v)".replace( "!IF!", INDEX_FILE )
+            + "\n?s <!PF!> ('!IF!' ?v)"
+                .replace( "!IF!", INDEX_FILE )
+                .replace( "!PF!", MYPF )
             + "\n}"
             ;
         Query q = QueryFactory.create( queryString );
         QueryExecution e = QueryExecutionFactory.create( q, c.getDataset() );
-        e.getContext().set( Symbol.create("eh:/my-property-function"), directory );
         c.setContext( e.getContext() );
         ResultSet rs = e.execSelect();
         while (rs.hasNext()) System.err.println( rs.next() );
@@ -84,6 +84,7 @@ public class generic_indexing_example
         Resource mapIf = m.createResource();
         Resource ds = m.createResource( "http://example.com/x/replacement/fakePathInfo" );
         Resource r = m.createResource( "eh:/registration" );
+        Resource i = m.createResource( "eh:/indexing" );
         Property LOC = m.createProperty( "http://jena.hpl.hp.com/2008/tdb#location" );
         root
             .addProperty( RDF.type, Vocab.SPARQLITE )
@@ -91,13 +92,18 @@ public class generic_indexing_example
             .addProperty( Vocab.sparqliteDataset, ds )
             .addProperty( Vocab.compositeIndexDirectory, directory )
             .addProperty( Vocab.register, r )
+            .addProperty( Vocab.index, i )
             ;
         ds
             .addProperty( RDF.type, Vocab.TDB_Dataset )
             .addProperty( LOC, directory + "/" + TDB_DIRECTORY )
             ;
+        i
+            .addProperty( Vocab.forPredicate, MYPF )
+            .addProperty( Vocab.useDirectory, directory )
+            ;
         r
-            .addProperty( Vocab.forPredicate, "eh:/my-property-function" )
+            .addProperty( Vocab.forPredicate, MYPF )
             .addProperty( Vocab.useClass, propertyfunctions.genericIndex.class.getName() );
         mapIf
             .addProperty( Vocab.matches, ".*" )
