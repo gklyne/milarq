@@ -7,7 +7,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	>
 
-	<display-name>SPARQLite Web Application</display-name>
+	<display-name>MILARQ Web Application</display-name>
 	
 	<!-- 
 		N.B. this version of SPARQLite is designed to work with Jena TDB 0.7.1.
