@@ -5,7 +5,11 @@
 [] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
 
 <#dataset> rdf:type tdb:DatasetTDB ;
-    # file path is relative to eclipse workspace directory
-    tdb:location "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/tdb/tolkien" ;
-    .
 
+    # File path is relative to eclipse workspace directory
+    tdb:location "googlecode_milarq/webapp/WEB-INF/data/tdb/tolkien" ;
+
+    # File path is absolute for Chris' dev system:
+    #tdb:location "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/tdb/tolkien" ;
+
+    .
