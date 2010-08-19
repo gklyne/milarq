@@ -10,3 +10,6 @@ syntax: regexp
 ^workspace/claros-tdb.*$
 syntax: regexp
 ^workspace/work.*$
+
+syntax: regexp
+^webapp/WEB-INF/data/lucene$
