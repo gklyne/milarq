@@ -1,16 +1,20 @@
 Notes for using MILARQ
+======================
 
-Preparing composite indexes:
+Preparing composite indexes
+---------------------------
 
 See workspace/tools/process.sh
 
 
-Configuring and running a SPARQLite servlet using the extra indexing:
+Configuring and running a SPARQLite servlet using the extra indexing
+--------------------------------------------------------------------
 
 See docs/howto.text
 
 
-Directories:
+Directories
+-----------
 
 src/
 - all java sources
@@ -50,3 +54,8 @@ webapp/WEB-INF/lib/...
 webapp/lib/...
 - stuff used by the SPARQLite javascript applications (YUI, etc.)
 
+
+Testing
+-------
+
+(What tests should be runnable out-of-box with properly configured system?)
