@@ -19,15 +19,20 @@ public abstract class Config
     
     protected final String pathInfo;
     protected final IndexMap indexMap;
+    protected final boolean defaultGraphIsUnion;
 
-    public Config( String pathInfo, IndexMap indexMap )
-        { this.pathInfo = pathInfo; this.indexMap = indexMap; }
+    public Config( String pathInfo, IndexMap indexMap, boolean setUnionDefaultGraph )
+        { 
+        this.pathInfo = pathInfo; 
+        this.indexMap = indexMap; 
+        this.defaultGraphIsUnion = setUnionDefaultGraph;
+        }
     
     public String getPathInfo()
         { return pathInfo; }
 
-    public boolean getSymUnionDefaultGraph()
-        { return false; }
+    public boolean getDefaultGraphIsUnion()
+        { return defaultGraphIsUnion; }
     
     public abstract Dataset getDataset();
     
@@ -62,7 +67,7 @@ public abstract class Config
 
     public void setContext( Context context )
         {
-        context.set( TDB.symUnionDefaultGraph, false ); 
+        context.set( TDB.symUnionDefaultGraph, defaultGraphIsUnion ); 
         context.set( Vocab.CompositeIndexDirectory, getCompositeIndexDirectory() );
         indexMap.setContext( context );        
         }

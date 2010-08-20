@@ -1,6 +1,7 @@
 package cmd;
 
 import java.io.*;
+import java.util.*;
 
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -39,13 +40,32 @@ public class generic_indexing_example
             + "\n?s <!PF!> ('!IF!' ?v)"
                 .replace( "!IF!", INDEX_FILE )
                 .replace( "!PF!", MYPF )
-            + "\n}"
+            + "\n. ?s <eh:/property> ?w"
+            + "\n}" 
+            + "\n"
             ;
         Query q = QueryFactory.create( queryString );
         QueryExecution e = QueryExecutionFactory.create( q, c.getDataset() );
         c.setContext( e.getContext() );
         ResultSet rs = e.execSelect();
-        while (rs.hasNext()) System.err.println( rs.next() );
+        while (rs.hasNext()) System.err.println( pretty( rs.next() ) );
+        }
+
+    private String pretty( QuerySolution q )
+        {
+        StringBuilder b = new StringBuilder();
+        for (String n: asSet( q.varNames() ))
+            {
+            b.append( n ).append( "=" ).append( q.get( n ) ).append( "\n" );
+            }
+        return b.toString();
+        }
+
+    private <T> Set<T> asSet( Iterator<T> it )
+        {
+        Set<T> result = new HashSet<T>();
+        while (it.hasNext()) result.add( it.next() );
+        return result;
         }
 
     private void createIndexFile() throws FileNotFoundException
@@ -68,7 +88,18 @@ public class generic_indexing_example
 
     private void addExampleData( Model m )
         {
-        // none at present
+        if (true) m.add
+            (
+            m.createResource( "http://example.com/thing" ),
+            m.createProperty( "eh:/property" ),
+            m.createLiteral( "Epistle" )
+            );
+        if (true) m.add
+            (
+            m.createResource( "http://example.com/thunk" ),
+            m.createProperty( "eh:/not-the-one" ),
+            m.createLiteral( "Spikard" )
+            );
         }
 
     private Sparqlite createSparqlite()
@@ -90,9 +121,9 @@ public class generic_indexing_example
             .addProperty( RDF.type, Vocab.SPARQLITE )
             .addProperty( Vocab.mapIf, mapIf )
             .addProperty( Vocab.sparqliteDataset, ds )
-            .addProperty( Vocab.compositeIndexDirectory, directory )
             .addProperty( Vocab.register, r )
             .addProperty( Vocab.index, i )
+            .addLiteral( Vocab.defaultGraphIsUnion, false )
             ;
         ds
             .addProperty( RDF.type, Vocab.TDB_Dataset )
