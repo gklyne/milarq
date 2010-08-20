@@ -9,10 +9,6 @@
 
 	<display-name>MILARQ Web Application</display-name>
 	
-	<!-- 
-		N.B. this version of SPARQLite is designed to work with Jena TDB 0.7.1.
-	-->
-	
     <servlet>
        <display-name>sparqlite initialisation</display-name>
        <servlet-name>Sparqlite Init</servlet-name>
