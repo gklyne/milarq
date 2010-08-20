@@ -10,18 +10,13 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 
 import uk.ac.ox.zoo.sparqlite.config.Config;
-import uk.ac.ox.zoo.sparqlite.config.Vocab;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.sparql.util.Context;
-import com.hp.hpl.jena.tdb.TDB;
 
 public class EndpointTDB extends Endpoint {
 	

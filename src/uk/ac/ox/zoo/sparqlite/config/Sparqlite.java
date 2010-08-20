@@ -30,8 +30,15 @@ public class Sparqlite
             List<ConditionalTransform> ts = getTransformsFor( root );
             IndexMap im = getIndexMapFor( root );
             PropertyMap pf = getPropertyMap( root );
+            boolean defaultGraphIsUnion = getDefaultGraphIsUnion( root );
             log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
-            return new Sparqlite( root, ts, im, pf );
+            return new Sparqlite( root, ts, im, pf, defaultGraphIsUnion );
+            }
+
+        private boolean getDefaultGraphIsUnion( Resource root )
+            {
+            Statement s = root.getProperty( Vocab.defaultGraphIsUnion );
+            return s == null ? true : s.getBoolean();
             }
 
         private PropertyMap getPropertyMap( Resource root )
@@ -98,6 +105,7 @@ public class Sparqlite
     private final IndexMap indexMap;
     private final List<ConditionalTransform> transforms;
     private final PropertyMap propertyFunctions;
+    private final boolean defaultGraphIsUnion;
     
     static class PropertyMap
         {
@@ -124,15 +132,22 @@ public class Sparqlite
 
     public Sparqlite( List<ConditionalTransform> transforms )
         {
-        this( missingRoot, transforms, new IndexMap(), new PropertyMap() ); 
+        this( missingRoot, transforms, new IndexMap(), new PropertyMap(), false ); 
         }
 
-    public Sparqlite( Resource root, List<ConditionalTransform> transforms, IndexMap indexMap, PropertyMap propertyFunctions )
+    public Sparqlite
+        ( Resource root
+        , List<ConditionalTransform> transforms
+        , IndexMap indexMap
+        , PropertyMap propertyFunctions
+        , boolean defaultGraphIsUnion
+        )
         { 
         this.root = root;
         this.indexMap = indexMap;
         this.transforms = transforms; 
         this.propertyFunctions = propertyFunctions;
+        this.defaultGraphIsUnion = defaultGraphIsUnion;
         }
 
     public Config getConfig( String pathInfo, PathMapper context )
@@ -143,12 +158,12 @@ public class Sparqlite
             Resource r = root.getModel().createResource( loc );
             if (!root.hasProperty( Vocab.sparqliteDataset, r )) 
                 throw new RuntimeException( "the dataset resource " + r + " for " + pathInfo + " is not a dataset object of " + root );
-            return new ConfigByModel( pathInfo, indexMap, r );
+            return new ConfigByModel( pathInfo, indexMap, r, defaultGraphIsUnion );
             }
         else
             {
             String storeDescFilePath = context.mapPath( loc );
-            return new ConfigByFile( pathInfo, indexMap, storeDescFilePath );
+            return new ConfigByFile( pathInfo, indexMap, storeDescFilePath, defaultGraphIsUnion );
             }
         }
     

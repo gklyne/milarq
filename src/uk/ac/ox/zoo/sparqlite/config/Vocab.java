@@ -92,5 +92,7 @@ public class Vocab
 
     public static final Property useClass = p( "http://purl.org/net/sparqlite/vocab#useClass" );
 
-    public static final Property register = p( "http://purl.org/net/sparqlite/vocab#reghister" );
+    public static final Property register = p( "http://purl.org/net/sparqlite/vocab#register" );
+
+    public static final Property defaultGraphIsUnion = p( "http://purl.org/net/sparqlite/vocab#defaultGraphIsUnion" );;
     }

@@ -9,4 +9,5 @@
 
 lite:root a lite:Sparqlite
     ; lite:mapIf [lite:matches ".*"; lite:replacement "WEB-INF/tdb/%s.ttl"]
+    ; lite:defaultGraphIsUnion true
     .

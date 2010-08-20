@@ -8,9 +8,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class ConfigByModel extends Config
     {
-    public ConfigByModel( String pathInfo, IndexMap indexMap, Resource datasetRoot )
+    public ConfigByModel( String pathInfo, IndexMap indexMap, Resource datasetRoot, boolean defaultGraphIsUnion )
         {
-        super( pathInfo, indexMap );
+        super( pathInfo, indexMap, defaultGraphIsUnion );
         this.datasetRoot = datasetRoot;
         this.compositeIndexDirectory = (String) new AB().open( datasetRoot );
         }
