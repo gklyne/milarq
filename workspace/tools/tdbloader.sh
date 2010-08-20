@@ -3,7 +3,7 @@
 #   tdbloader.sh -v -loc=lgpn/tdb lgpn/rdf/lgpn-par.rdf
 
 if [ "$1" == "" ]; then
-    echo "usage tdbloader.sh [-v] -loc=tdbdirectory rdffile"
+    echo "usage tdbloader.sh [-v] [-graph=graphuri] -loc=tdbdirectory rdffile"
     exit 0
 fi
 
