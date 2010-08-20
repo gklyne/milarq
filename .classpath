@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/arq-2.8.3-tests.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/arq-2.8.3.jar" sourcepath="/home/chris/JenaProjects/CopyOfARQ/src"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-logging-1.1-sources.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/icu4j-3.4.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iri-0.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jena-2.6.2-tests.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jena-2.6.2.jar" sourcepath="/home/christopher/M2/repository/com/hp/hpl/jena/jena/2.6.3/jena-2.6.3-sources.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.3.1.jar" sourcepath="/home/chris/Download/lucene-2.3.1-src.zip"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/servlet-api-2.5-sources.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-log4j12-1.5.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/tdb-0.8.5-tests.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/tdb-0.8.5.jar" sourcepath="/home/chris/.m2/repository/com/hp/hpl/jena/tdb/0.8.6/tdb-0.8.6-sources.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/wstx-asl-3.2.9.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="test/lib/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/opencsv-2.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/opencsv-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/opencsv-2.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/nekohtml.jar"/>
+	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
+</classpath>

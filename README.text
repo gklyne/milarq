@@ -1,0 +1,61 @@
+Notes for using MILARQ
+======================
+
+Preparing composite indexes
+---------------------------
+
+See workspace/tools/process.sh
+
+
+Configuring and running a SPARQLite servlet using the extra indexing
+--------------------------------------------------------------------
+
+See docs/howto.text
+
+
+Directories
+-----------
+
+src/
+- all java sources
+src/cmd/ 
+- utilities for augmenting data, creating alternative indexes, and performance-testing 
+src/propertyfunctions/
+- additional ARQ property functions used to process additional indexes
+src/uk.ac.ox.zoo.sparqlite/...
+- original SPARQlite code, reorganized, integrated with new property functions and with new/updated configuration mechanisms
+src/util/
+- bits of support code.  TF.java defines local vocabularies (mainly for testing?)
+
+JUnit3/
+Apache Tomcat .../
+JRE System Library/
+Referenced Libraries/
+- instantiated by some Eclipse magic, it seems: they aren't present in the code repository
+
+docs/
+- servlet setup HOWTO and project plan.  More to come.
+
+lib/
+- servlet API JAR (?)
+
+test/
+- unused hangover from SPASRQLite?
+
+webapp/
+- web application (servlet) directories
+webapp/WEB-INF/data/
+webapp/WEB-INF/tdb/
+- test data from SPARQLite (is this used?)
+webapp/WEB-INF/classes/...
+? can't tell if this is used or up to date - it appears to contain some new class files, but I don't see any of the exception classes here.
+webapp/WEB-INF/lib/...
+- java support libraries used (ARQ, TDB and much more)
+webapp/lib/...
+- stuff used by the SPARQLite javascript applications (YUI, etc.)
+
+
+Testing
+-------
+
+(What tests should be runnable out-of-box with properly configured system?)

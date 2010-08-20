@@ -1,0 +1,9 @@
+Files in this directory may contain absolute or relative directory paths.
+To date, only the following have been modified for testing with relative
+values, assuming the eclipse workspace as the current directory, 
+and googlecode_milarq as the project directory name:
+
+tolkien.ttl
+rowling.ttl
+tolkien-larq.ttl
+rowling-larq.ttl

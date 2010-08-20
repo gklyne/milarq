@@ -1,0 +1,12 @@
+# Sparqlite assembly file.
+#
+# created by chris for milarq
+#
+@prefix tdb:    <http://jena.hpl.hp.com/2008/tdb#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix ja:     <http://jena.hpl.hp.com/2005/11/Assembler#>.
+@prefix lite:   <http://purl.org/net/sparqlite/vocab#>.
+
+lite:root a lite:Sparqlite
+    ; lite:mapIf [lite:matches ".*"; lite:replacement "WEB-INF/tdb/%s.ttl"]
+    .

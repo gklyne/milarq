@@ -1,0 +1,17 @@
+@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix sparqlite: <http://purl.org/net/sparqlite/vocab#> .
+
+[] ja:loadClass "com.hp.hpl.jena.tdb.TDB" .
+
+<#dataset> rdf:type tdb:DatasetTDB ;
+
+    # File paths are relative to eclipse workspace directory
+    tdb:location "googlecode_milarq/webapp/WEB-INF/data/tdb/rowling" ;
+    sparqlite:larqLocation "googlecode_milarq/webapp/WEB-INF/data/lucene/rowling" ;
+
+    # File paths are absolute for Chris' dev system:
+    #tdb:location "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/tdb/rowling" ;
+    #sparqlite:larqLocation "/home/christopher/MILARQ-04-23a/milarq/webapp/WEB-INF/data/lucene/rowling" ;
+    .
