@@ -100,7 +100,6 @@ public class generic_indexing_example
             m.createProperty( "eh:/not-the-one" ),
             m.createLiteral( "Spikard" )
             );
-            
         }
 
     private Sparqlite createSparqlite()
@@ -124,6 +123,7 @@ public class generic_indexing_example
             .addProperty( Vocab.sparqliteDataset, ds )
             .addProperty( Vocab.register, r )
             .addProperty( Vocab.index, i )
+            .addLiteral( Vocab.defaultGraphIsUnion, false )
             ;
         ds
             .addProperty( RDF.type, Vocab.TDB_Dataset )

@@ -15,11 +15,11 @@ public class ConfigByFile extends Config
     protected Model description;
     
     public ConfigByFile( String PATHINFO, String storeDescFilePath )
-        { this( PATHINFO, new IndexMap(), storeDescFilePath );  }    
+        { this( PATHINFO, new IndexMap(), storeDescFilePath, false );  }    
     
-    public ConfigByFile( String PATHINFO, IndexMap indexMap, String storeDescFilePath )
+    public ConfigByFile( String PATHINFO, IndexMap indexMap, String storeDescFilePath, boolean defaultGraphIsUnion  )
         { 
-        super( PATHINFO, indexMap ); 
+        super( PATHINFO, indexMap, defaultGraphIsUnion ); 
         this.storeDescFilePath = storeDescFilePath; 
         }
 
