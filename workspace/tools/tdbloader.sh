@@ -7,16 +7,8 @@ if [ "$1" == "" ]; then
     exit 0
 fi
 
-# MILARQ project root directory: default correct for GK's mac}
+source `dirname $0`/define_paths.sh
 
-export MILARQ_ROOT=${milarq:-~/workspace/googlecode_milarq}
-export CP="`echo $MILARQ_ROOT/webapp/WEB-INF/lib/*.jar | sed -e 's/ /:/g'`"
-export JAVA="java -Xmx1024M -server -cp $CP"
-export TDBLOADER="$JAVA tdb.tdbloader"
-
-$TDBLOADER "$@"
+$JAVA tdb.tdbloader "$@"
 
 # End.
-
-#export CP="`echo $MILARQ_ROOT/webapp/WEB-INF/lib/*.jar | sed -e 's/ /:/g'`:$MILARQ_ROOT/webapp/WEB-INF/classes"
-
