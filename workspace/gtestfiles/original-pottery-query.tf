@@ -1,9 +1,9 @@
-!query original athens query
+!query original pottery query
 -groups slow
 -count 4
 -larq lucene 
 -tdb claros-tdb
--label orig-athens-query
+-label original-pottery
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -11,12 +11,10 @@ PREFIX crm: <http://purl.org/NET/crm-owl#>
 PREFIX claros: <http://purl.org/NET/Claros/vocab#>
 PREFIX pf:  <http://jena.hpl.hp.com/ARQ/property#>
 PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
-
+PREFIX arqfn:  <java:uk.ac.ox.zoo.sparqlite.>
 SELECT ?g ?s ?t ?early ?late WHERE
 { GRAPH ?g
   {
-    { ?lit pf:textMatch  "athens"  . }
-    { ?s claros:hasLiteral ?lit . }
     {
       ?s rdf:type crm:E22.Man-Made_Object ;
         crm:P2.has_type
@@ -42,27 +40,4 @@ SELECT ?g ?s ?t ?early ?late WHERE
   }
 } 
 ORDER BY ASC (xsd:integer(?early)) 
-LIMIT 1
-
-!query athens with composite index property functions
--groups fast example
--count 4
--tdb claros-tdb
--label composite-adhoc-index
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX crm: <http://purl.org/NET/crm-owl#>
-PREFIX claros: <http://purl.org/NET/Claros/vocab#>
-PREFIX pf:  <http://jena.hpl.hp.com/ARQ/property#>
-PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
-
-PREFIX cpf: <java:propertyfunctions.>
-
-SELECT ?g ?s ?early ?late WHERE
-{
-  ?s cpf:compositeIndex ("athens" ?early ?late).
-  ?s claros:subject-has-type "Pottery".
-  GRAPH ?g { ?s rdf:type ?ignored }
-} 
 LIMIT 1

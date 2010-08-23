@@ -3,22 +3,24 @@
  */
 package util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import com.hp.hpl.jena.util.iterator.Filter;
 
 public class CommandArgs
 	{
 	private final Map<String, List<String>> map = new HashMap<String, List<String>>();
+	private final Set<String> messages = new HashSet<String>();
 	
-	public void put(String key, String arg) 
-		{ 
-		List<String> present = map.get(key);
-		if (present == null) map.put(key, present = new ArrayList<String>() );
-		present.add(arg);
-		}
-    
+	public boolean ok()
+	    { return messages.size() == 0; }
+	
+	public boolean bad()
+	    { return messages.size() > 0; }
+	
+	public Set<String> messages()
+	    { return messages; }
+
     public String getOptional(String key, String ifAbsent) 
         {
         List<String> present = map.get(key);
@@ -61,7 +63,16 @@ public class CommandArgs
         return result;
         }
 
-    public static CommandArgs parse(String[] args) 
+    public static CommandArgs parse( String allowed, String [] args )
+        { return parse( allowOnly( allowed ), args, false ); }
+    
+    public static CommandArgs parse( String[] args ) 
+        { return parse( Filter.<String>any(), args, false ); }
+    
+    public static CommandArgs parse( String allowed, String [] args, boolean failIfErrors )
+        { return parse( allowOnly( allowed ), args, failIfErrors ); }
+    
+    public static CommandArgs parse( Filter<String> allowed, String[] args, boolean failIfErrors ) 
         {
         String key = "-";
         CommandArgs result = new CommandArgs();
@@ -70,6 +81,8 @@ public class CommandArgs
         	if (arg.startsWith("-"))
         		{
         		String trimmed = arg.replaceFirst( "^-+", "-" );
+        		if (!allowed.accept( trimmed )) 
+        		    result.messages.add( trimmed + " is not a legal option for this command: " + allowed );
         		int eq = trimmed.indexOf('=');
         		if (eq < 0)
         			key = result.declare(trimmed);
@@ -83,6 +96,30 @@ public class CommandArgs
         	else
         		result.put( key, arg );
         	}
+        if (result.bad())
+            throw new RuntimeException( "illegal options: " + result.messages.toString() );
         return result;
-        }        
+        }          
+    
+    private void put(String key, String arg) 
+        { 
+        List<String> present = map.get(key);
+        if (present == null) map.put(key, present = new ArrayList<String>() );
+        present.add(arg);
+        }
+    
+    private static Filter<String> allowOnly( String allowed )
+        {
+        final Set<String> elements = new HashSet<String>();
+        for (String a: allowed.split( " +" )) elements.add( a );
+        return new Filter<String>() 
+            {
+            @Override public boolean accept( String o )
+                { return elements.contains( o ); }  
+            
+            @Override public String toString()
+                { return "allowed: " + elements.toString(); }
+            };
+        }
+
 	}

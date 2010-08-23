@@ -29,14 +29,14 @@ export TARGET_TDB=claros-tdb
 # created. Should be empty.
 #
 
-export INDEXES=./indexes
+export INDEXES=./gindexes
 
 #
 # directory in which *.tf testfiles reside, for the production
 # of performance reports.
 #
 
-export TESTSDIR=./testfiles
+export TESTSDIR=./gtestfiles
 
 #
 # directory in which template files (for weave) are found
@@ -142,7 +142,7 @@ function generate_term-subject-notbefore-notafter()
 function create_index_files()
     {
     echo :: creating index files ::
-    $JAVA cmd.generate_sorted_indexes -indexes $INDEXES < $WORK/term-subject-nb-na.csv 
+    $JAVA cmd.generate_sorted_indexes -ug true -indexes $INDEXES < $WORK/term-subject-nb-na.csv 
     }
 
 #
