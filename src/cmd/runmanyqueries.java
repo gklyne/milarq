@@ -7,6 +7,8 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.query.larq.LARQ;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.util.Context;
+import com.hp.hpl.jena.sparql.util.Symbol;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -14,6 +16,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 import uk.ac.ox.zoo.sparqlite.cmd.support.Answer;
 import uk.ac.ox.zoo.sparqlite.cmd.support.Result;
+import uk.ac.ox.zoo.sparqlite.config.Sparqlite;
 import util.*;
 
 /**
@@ -71,11 +74,10 @@ public class runmanyqueries
     {
     public static void main( String [] args )
         {
-        CommandArgs a = CommandArgs.parse( args );
+        CommandArgs a = CommandArgs.parse( "-from -groups -title -stylesheet", args );
         runmanyqueries rq = new runmanyqueries( a );
         for (String from: a.getAll( "-from" ))
             {
-            System.err.println( ">> file: " + from );
             String completeFile = FileManager.get().readWholeFileAsUTF8( from );
             String [] tests = completeFile.split( "(^|\n)!query *" );
             for (String test: tests)
@@ -126,7 +128,7 @@ public class runmanyqueries
     private void runTest( String fromFile, String title, String args, String query )
         {
         String tidyArgs = args.replaceAll( "\n| +", " " );
-        CommandConfig c = new CommandConfig( tidyArgs.split( " " ) );
+        CommandConfig c = new CommandConfig( tidyArgs.split( " +" ) );
         Result result = new Result( fromFile, c.label, title, tidyArgs );
         if (permitted( c )) runAndTime( query, result, c );
         }
@@ -144,6 +146,9 @@ public class runmanyqueries
 
     private void runAndTime( String query, Result result, CommandConfig c )
         {
+        
+        // TODO rest of approriate config goes here
+        
         Dataset d = TDBFactory.createDataset( c.TDBloc );
         String queryString = queryFromArg( query );
         result.setQuery( queryString );
@@ -153,6 +158,7 @@ public class runmanyqueries
             Query q = QueryFactory.create( queryString, Syntax.syntaxARQ );
             QueryExecution qexec = QueryExecutionFactory.create( q, d );
             setLARQ( c, qexec );
+            c.setContext( qexec.getContext() );
             long zero = System.currentTimeMillis();
             ResultSet rs = qexec.execSelect();
             List<String> resultVars = rs.getResultVars();

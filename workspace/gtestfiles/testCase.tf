@@ -49,6 +49,7 @@ LIMIT 1
 -count 4
 -tdb claros-tdb
 -label composite-adhoc-index
+-set java:propertyfunctions.genericIndex=gindexes
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -61,7 +62,7 @@ PREFIX cpf: <java:propertyfunctions.>
 
 SELECT ?g ?s ?early ?late WHERE
 {
-  ?s cpf:compositeIndex ("athens" ?early ?late).
+  ?s cpf:genericIndex ("athens-na" ?early ?late).
   ?s claros:subject-has-type "Pottery".
   GRAPH ?g { ?s rdf:type ?ignored }
 } 
