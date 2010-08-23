@@ -2,6 +2,7 @@ package cmd;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import util.CommandArgs;
 
@@ -28,11 +29,24 @@ public class generate_sorted_indexes
        
     generate_sorted_indexes( String [] args )
         {
-        CommandArgs a = CommandArgs.parse( args );
+        CommandArgs a = CommandArgs.parse( "-indexes -ug", args );
+        if (a.bad()) throw new IllegalArgumentException( a.messages().toString() );
         indexDir = a.getOptional( "-indexes", "indexes" );
+        useGenericFormat = asBoolean( a.getOptional( "-ug", "false" ) );
         }
     
-    String indexDir = "indexes";
+    public static final Pattern True = Pattern.compile( "^(true|t|yes)$", Pattern.CASE_INSENSITIVE );
+    public static final Pattern False = Pattern.compile( "^(false|f|no)$", Pattern.CASE_INSENSITIVE );
+    
+    private boolean asBoolean( String b )
+        {
+        if (True.matcher( b ).find()) return true;
+        if (False.matcher( b ).find()) return false;
+        throw new IllegalArgumentException( "not a boolean value: " + b );
+        }
+
+    final String indexDir;
+    final boolean useGenericFormat;
     
     static class Element
         {
@@ -93,7 +107,14 @@ public class generate_sorted_indexes
         PrintStream ps = new PrintStream( bos );
         for (Element e: elementsForCurrentTerm)
             {
-            ps.print( e.subject );
+            if (useGenericFormat)
+                {
+                ps.print( "<" );
+                ps.print( e.subject );
+                ps.print( ">" );
+                }
+            else
+                ps.print( e.subject );
             ps.print( "," );
             ps.print( e.notBefore );
             ps.print( "," );
