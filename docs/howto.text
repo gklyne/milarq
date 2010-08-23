@@ -53,9 +53,17 @@ The example assembler file looks like:
  
  When ServletTDB is invoked by a GET on the Sparqlite server, it requests
  the Sparqlite object to create a Config specialised to this request, by
- passing it the path info of the request and the servelet context. This config
- is passed to the EndpointTDB constructor, which retains it until it needs
- a queryable dataset.
+ passing it the path info of the request and a PathMapper constructed from
+ the servelet context. 
+ 
+   (The PathMapper maps from "incomplete" paths to "full" paths. A
+    PathMapper constructed from a ServletContext just calls getRealPath,
+    but for testing purposes it's much simpler to be able to pass in
+    specialised PathMappers than it is to attempt to construct a suitable
+    ServletContext.)
+   
+This specialised Config is passed to the EndpointTDB constructor, which 
+retains it  until it needs a queryable dataset.
  
  When it does so, it must convert the path info provided into another assembler
  model which describes the dataset to use in the query. The path info is
