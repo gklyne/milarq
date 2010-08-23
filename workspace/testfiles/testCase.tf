@@ -47,7 +47,7 @@ LIMIT 1
 !query athens with composite index property functions
 -groups fast example
 -count 4
--loc augmented-tdb
+-tdb claros-tdb
 -label composite-adhoc-index
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
