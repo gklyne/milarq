@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>some results</title>
+<link href='styles/results.css' rel='stylesheet' type='text/css'/>
+</head>
+<body>
+<h1>summary</h1>
+<table class='framed'>
+  <thead>
+    <tr><th>from file</th><th>with title</th></tr>
+    </thead>
+  <tr for="?instance {?instance rdf:type tf:TestInstance}">
+    <td><span val="?instance.tf:fromFile">file name of test</span></td>
+    <td><span val="?instance.tf:withTitle">title given to test</span></td>
+  </tr>
+</table>
+
+<div for="?instance {?instance rdf:type tf:TestInstance}">
+  <h2>file <span val="?instance.tf:fromFile"/></h2>
+  <h3><span val="?instance.tf:fromFile"/></h3>
+  <div>test arguments: <span val="?instance.tf:withArguments"/></div>
+  <div>query variables: <span val="?instance.tf:queryVariables"/></div>
+  <h4>query</h4>
+  <pre>
+    <span val="?instance.tf:withQuery|stripPrefixes"/>
+  </pre>
+  <table class="framed">
+    <thead>
+      <th>iteration</th>
+      <th>time (sec)</th>
+      <th>rows</th>
+    </thead>
+
+    <tr for="?iteration {?instance tf:iteration ?iteration. ?iteration tf:index ?index} ORDER BY (?index)">
+      <td><span val="?iteration.tf:index|usual"/></td>
+      <td><span val="?iteration.tf:timeInMs|div1000"/></td>
+      <td>
+        <table>
+          <thead>
+            <tr>
+              <th for="?var {?instance tf:queryVar ?var}"><span val="?var"/></th>
+            </tr>
+          </thead>
+          <tr for="?row {?iteration tf:resultRow ?row}">
+            <td for="?val {?instance tf:queryVar ?var. ?row tf:binding [tf:varName ?var; tf:varValue ?val]}">
+              <span val="?val"></span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+</div>
+
+</body>
+</html>

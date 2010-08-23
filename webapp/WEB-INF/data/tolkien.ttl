@@ -1,0 +1,34 @@
+@prefix dc:        <http://purl.org/dc/elements/1.1/> .
+@prefix vcard:     <http://www.w3.org/2001/vcard-rdf/3.0#> .
+@prefix ns:        <http://example.org/ns#> .
+
+@prefix :          <http://example.org/book2/> .
+
+# A small dataset for usage examples of Joseki
+# This data is intentionaly irregular (e.g. different ways to
+# record the book creator) as if the information is either an
+# aggregation or was created at different times.
+
+:book1
+    dc:title    "The Hobbit" ;
+    dc:creator  "J.R.R. Tolkien" ;
+    .
+    
+:book2
+    dc:title    "The Fellowship of the Ring" ;
+    dc:creator  _:a .
+    
+:book3
+    dc:title    "The Two Towers" ;
+    dc:creator  _:a .
+    
+:book4
+    dc:title    "The Return of the King" .
+    
+_:a
+    vcard:FN "J.R.R. Tolkien" ;
+    vcard:N
+        [ vcard:Family "Tolkien" ;
+          vcard:Given "John" 
+        ]
+    .

@@ -1,0 +1,91 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head> 
+        <title>SPARQLite Endpoint Query</title>
+        
+        <!-- Combo-handled YUI CSS files: --> 
+<!--        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?2.6.0/build/reset-fonts-grids/reset-fonts-grids.css&amp;2.6.0/build/base/base-min.css&amp;2.6.0/build/logger/assets/skins/sam/logger.css&amp;2.6.0/build/yuitest/assets/skins/sam/yuitest.css"/> -->
+        <link rel="stylesheet" type="text/css" href="lib/yui_2.6.0/build/reset-fonts-grids/reset-fonts-grids.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/yui_2.6.0/build/base/base-min.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/yui_2.6.0/build/logger/assets/skins/sam/logger.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/yui_2.6.0/build/yuitest/assets/skins/sam/yuitest.css"/>
+        
+        <!-- Combo-handled YUI JS files: --> 
+<!--        <script type="text/javascript" src="http://yui.yahooapis.com/combo?2.6.0/build/yahoo-dom-event/yahoo-dom-event.js&amp;2.6.0/build/connection/connection-min.js&amp;2.6.0/build/json/json-min.js&amp;2.6.0/build/logger/logger-min.js&amp;2.6.0/build/yuitest/yuitest-min.js"></script> -->
+        
+        <script type="text/javascript" src="lib/yui_2.6.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+        <script type="text/javascript" src="lib/yui_2.6.0/build/connection/connection-min.js"></script>
+        <script type="text/javascript" src="lib/yui_2.6.0/build/logger/logger-min.js"></script>        
+        <script type="text/javascript" src="lib/yui_2.6.0/build/yuitest/yuitest-min.js"></script>
+        
+        <!-- Testing scripts -->
+        <script type="text/javascript" src="query.js"></script>
+        
+        <!-- custom style -->
+        <style type="text/css">
+.yui-skin-sam .yui-log {width: 100%;}            
+.yui-skin-sam .yui-log .info {background-color:#DDD;}
+.yui-skin-sam .yui-log .pass {background-color:#A7CC25;}
+.yui-skin-sam .yui-log .fail {background-color:#E32F0B;}    
+#results, #headers {
+    border-top: 1px dashed black;
+    border-bottom: 1px dashed black;
+    padding: 5px;
+}
+.pending {
+}
+.ok {
+    background-color: #A7CC25;
+}
+.notok {
+    background-color: #E32F0B;
+}
+        </style>
+
+    </head>
+ 
+    <body>
+        <div id="doc">
+            <div id="hd">
+                <!-- header -->
+                <h1>SPARQLite Endpoint Query</h1>
+            </div>  
+            <div id="bd">
+                <!-- body -->
+                <p>Run a SPARQL query against an endpoint.</p>
+                <p>See also endpoint <a href="test.html">test</a> and <a href="explorer.html">explorer</a> pages.</p>
+                <p>
+                    Relative path to endpoint: <input id="path" type="text" value="endpoint/tolkien"></input>
+                    Method: <select id="method"><option value="GET">GET</option><option value="POST">POST</option></select> <button value="run query" onclick="runQuery()">run query</button> <span id="status"></span>
+                </p>
+                <p>
+<textarea id="query" rows="1" cols="1" style="width:100%; height:300px;">
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX pf: &lt;http://jena.hpl.hp.com/ARQ/property#&gt;
+    
+# ASK { ?s ?p ?o }
+# SELECT * WHERE { ?s ?p ?o }
+# SELECT * WHERE { ?s ?p ?o } LIMIT 10
+# SELECT * WHERE { GRAPH ?g { ?s ?p ?o } }
+# DESCRIBE &lt;http://example.org/book/book1&gt;
+# DESCRIBE * WHERE { ?s ?p ?o }
+# CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }
+</textarea>
+                </p>
+                <p style="display: inline; position: relative; top: 10px; border: 1px solid black; background-color: white; text-align: right">HTTP response headers</p>
+                <pre style="padding: 15px 0 5px 0;" id="headers">HTTP response headers will be printed here</pre>
+                <p style="display: inline; position: relative; top: 10px; border: 1px solid black; background-color: white; text-align: right">HTTP response body</p>                <pre style="padding: 15px 0 5px 0;" id="results">results will be output here as raw JSON or RDF/XML</pre>
+            </div>  
+            <div id="ft" class="yui-skin-sam">
+                <!-- footer -->
+                <div id="logger"></div>
+                    <hr/>
+                    <p><a href="http://sparqlite.googlecode.com">SPARQLite</a></p>
+            </div>  
+        </div> 
+    </body>
+    
+</html>
