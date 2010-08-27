@@ -68,7 +68,7 @@ public class genericIndex extends PropertyFunctionEval
             String current = readLine( in );
                         
             @Override public void abort() 
-                {}
+                { close(); }
 
             @Override public Binding nextBinding() 
                 { return next(); }
