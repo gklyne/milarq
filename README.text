@@ -40,7 +40,7 @@ lib/
 - servlet API JAR (?)
 
 test/
-- unused hangover from SPASRQLite?
+- unused hangover from SPARQLite?
 
 webapp/
 - web application (servlet) directories
