@@ -64,7 +64,29 @@ echo TODO == check that the classpath has some relevant classes
 #
 # invoke java with the given classpath
 #
-export JAVA="java -cp $CP"
+if [ "$JAVA" == "" ]; then
+    export JAVA="java -cp $CP"
+fi
+
+# -------------------------------------------------------------
+#
+# invoke SED with extended regular expressions selected
+#
+SYSTEM="$(uname -s)"
+if [ "$SYSTEM" == "Linux" ]; then
+    # Linux
+    export SEDE="sed -r"
+elif [ "$SYSTEM" == "Darwin" ]; then
+    # MacOS
+    export SEDE="sed -E"
+elif [ "$SYSTEM" == "Cygwin" ]; then
+    # Windows+Cygwin
+    export SEDE="sed -r"
+    echo TODO == is '$SEDE' correct for Cygwin?
+else
+    echo "Unrecognized system type: $SYSTEM"
+    exit 1
+fi
 
 #
 # generate the (?s claros:has-term ?t) triples from the claros:hasLiteral
@@ -101,7 +123,7 @@ function generate_time-span_triples()
     {
     echo ::generating time-span triples ::
     tdbquery --query $TOOLS/time_span.sparql --loc $SOURCE_TDB \
-        | sed -r \
+        | $SEDE \
             -e 's/gYear/integer/g' \
             -e 's/"[^-"]*(-?[0-9][0-9][0-9][0-9])[^"]*"/"\1"/' \
             -e 's/""/"9999"/g' \
@@ -125,8 +147,9 @@ function load_generated_triples()
 #
 function generate_term-subject-notbefore-notafter()
     {
-    echo :: generating term x subject x not-before x not-after cvs file ::
+    echo :: generating term x subject x not-before x not-after cvs file - filtered ::
     $JAVA cmd.query -tdb $TARGET_TDB -query "select ?term ?s ?nb ?na where { ?s claros:subject-has-term ?term; claros:subject-not-before ?nb; claros:subject-not-after ?na}" \
+        | grep -v "^[0-9][0-9]:[0-9][0-9]:[0-9][0-9] WARN" \
         | sort > $WORK/term-subject-nb-na.csv
     }
 
@@ -175,9 +198,11 @@ function run_to_completion()
     echo :: running everything from scratch ::
     generate_has-term_triples
     generate_time-span_triples
+    generate_has-type_triples
     load_generated_triples
     generate_term-subject-notbefore-notafter
     create_index_files
-    run_performance_queries
-    produce_performance_report
+    # Not yet fixed for generic index processing:
+    #run_performance_queries
+    #produce_performance_report
     }
