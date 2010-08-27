@@ -11,6 +11,7 @@ import com.hp.hpl.jena.graph.impl.LiteralLabel;
 import com.hp.hpl.jena.graph.impl.LiteralLabelFactory;
 import com.hp.hpl.jena.query.QueryBuildException;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.shared.WrappedIOException;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.ExecutionContext;
 import com.hp.hpl.jena.sparql.engine.QueryIterator;
@@ -73,7 +74,10 @@ public class genericIndex extends PropertyFunctionEval
                 { return next(); }
 
             @Override public void close() 
-                {}
+                { 
+                try { in.close(); }
+                catch (IOException e) { throw new WrappedIOException( e ); }
+                }
 
             @Override public boolean hasNext() 
                 { return current != null; }
@@ -86,6 +90,7 @@ public class genericIndex extends PropertyFunctionEval
                 Binding b = new Binding1( binding, VS, S );
                 for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
                 current = readLine( in );
+                if (current == null) close();
                 System.err.println( ">> gi: returning " + b );
                 return b;
                 }
@@ -138,7 +143,7 @@ public class genericIndex extends PropertyFunctionEval
     private String readLine(BufferedReader in) 
         { 
         try { return in.readLine(); } 
-        catch (IOException e) { throw new RuntimeException( e ); }
+        catch (IOException e) { throw new WrappedIOException( e ); }
         }
 
     private BufferedReader inFromFile(String indexFullName) 
