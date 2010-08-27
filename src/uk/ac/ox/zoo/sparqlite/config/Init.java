@@ -37,6 +37,7 @@ public class Init extends ServletBase
         Resource root = config.createResource( configRoot );
         sparqlite = (Sparqlite) Assembler.general.open( root );
         log.trace( "assembled sparqlite configuration object" );
+        sparqlite.registerPropertyFunctions();
         }
     
     public static Sparqlite getSparqlite()

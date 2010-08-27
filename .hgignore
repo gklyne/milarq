@@ -13,3 +13,9 @@ syntax: regexp
 
 syntax: regexp
 ^webapp/WEB-INF/data/lucene$
+syntax: regexp
+^work/example\.spoo$
+syntax: regexp
+^work/s-hasterm\.ttl$
+syntax: regexp
+^workspace/gindexes$

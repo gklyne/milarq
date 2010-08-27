@@ -44,6 +44,7 @@ public class generic_indexing_example
             + "\n}" 
             + "\n"
             ;
+        System.err.println( ">> query string is:\n" + queryString );
         Query q = QueryFactory.create( queryString );
         QueryExecution e = QueryExecutionFactory.create( q, c.getDataset() );
         c.setContext( e.getContext() );
@@ -83,6 +84,8 @@ public class generic_indexing_example
         new File( path ).mkdir();
         Dataset d = TDBFactory.createDataset( path );
         addExampleData( d.getDefaultModel() );
+        System.err.println( ">> TDB contains: " );
+        d.getDefaultModel().write( System.err, "TTL" );
         return d;
         }
 
@@ -94,7 +97,7 @@ public class generic_indexing_example
             m.createProperty( "eh:/property" ),
             m.createLiteral( "Epistle" )
             );
-        if (true) m.add
+        if (false) m.add
             (
             m.createResource( "http://example.com/thunk" ),
             m.createProperty( "eh:/not-the-one" ),
