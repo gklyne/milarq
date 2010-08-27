@@ -15,6 +15,8 @@
 #   CP             - classpath for MILARQ utilities
 #   JAVA           - command to activiate Java environment with classpath, options, etc.
 #
+# Also defines function classpath for use by the "process..." scripts
+#
 
 # Can override by setting JAVA_BIN externally
 # Generic
@@ -38,5 +40,25 @@ CP=$MILARQ_CLASSES:$MILARQ_LIBS
 JAVA="$JAVA_BIN -Xmx1024M -server -cp $CP"
 
 # echo "The script you are running has basename `basename $0`, dirname `dirname $0`"
+
+function classpath()
+    {
+    echo "$CP"
+    }
+
+function tdbquery()
+    {
+    $JAVA tdb.tdbquery "$@" | grep -v "^[0-9][0-9]:[0-9][0-9]:[0-9][0-9] WARN"
+    }
+
+function tdbloader()
+    {
+    $JAVA tdb.tdbloader "$@"
+    }
+
+function tdblarqindex()
+    {
+    $JAVA uk.ac.ox.zoo.sparqlite.CreateLARQIndex "$@"
+    }
 
 # End.
