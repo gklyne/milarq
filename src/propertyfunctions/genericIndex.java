@@ -86,6 +86,7 @@ public class genericIndex extends PropertyFunctionEval
                 Binding b = new Binding1( binding, VS, S );
                 for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
                 current = readLine( in );
+                System.err.println( ">> gi: returning " + b );
                 return b;
                 }
 

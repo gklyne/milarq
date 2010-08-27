@@ -63,7 +63,7 @@ The example assembler file looks like:
     ServletContext.)
    
 This specialised Config is passed to the EndpointTDB constructor, which 
-retains it  until it needs a queryable dataset.
+retains it until it needs a queryable dataset.
  
  When it does so, it must convert the path info provided into another assembler
  model which describes the dataset to use in the query. The path info is
@@ -71,10 +71,10 @@ retains it  until it needs a queryable dataset.
  lite:matches regular expression matches the path info, then it is replaced
  by the lite:replacement string with %-insertions:
  
-    %s  the entire path info
     %p  the last component of the path info with any .suffix dropped
     %q  the last component of the path info, retaining any .suffix
     %r  the first component of the path, dropping any .suffix
+    %s  the entire path info
     
 This replacement string is used to find an RDF model describing the dataset.
 If the string does not "look like" an HTTP URL, then it is used as a filename
