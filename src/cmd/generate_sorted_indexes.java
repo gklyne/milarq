@@ -90,7 +90,7 @@ public class generate_sorted_indexes
             .replaceAll( " *\\d* *\\p{Alpha}+ *", "" )
             .replaceAll( " *\\p{Alpha}+ *\\d\\d? +", "" )
             .replaceAll( "\\d\\d? +", "" )
-            .replaceAll( "[^\\d]*", "" )
+            .replaceAll( "[^-\\d]*", "" )
             ;
         if (cleaned.length() == 0) return 9999;
         // System.err.println( ">> '" + s + "' becomes '" + cleaned + "', length " + cleaned.length() );
