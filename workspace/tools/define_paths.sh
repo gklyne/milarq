@@ -76,4 +76,9 @@ function tdblarqindex()
     $JAVA uk.ac.ox.zoo.sparqlite.CreateLARQIndex "$@"
     }
 
+function cmd.query()
+    {
+    $JAVA cmd.query "$@" | grep -v "^[0-9][0-9]:[0-9][0-9]:[0-9][0-9] WARN"
+    }
+
 # End.
