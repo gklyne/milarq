@@ -2,6 +2,7 @@ package uk.ac.ox.zoo.sparqlite.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.hp.hpl.jena.sparql.util.Context;
 import com.hp.hpl.jena.sparql.util.Symbol;
@@ -18,6 +19,12 @@ public class IndexMap
         {}
     
     private final Map<String, String> map = new HashMap<String, String>();
+
+    /**
+        For diagostics 
+     */
+    public Set<String> keySet()
+        { return map.keySet(); }
     
     /**
         Answer the directory path associated with the given predicate,

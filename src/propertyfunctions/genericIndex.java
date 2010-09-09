@@ -3,6 +3,9 @@ package propertyfunctions;
 import java.io.*;
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.openjena.atlas.lib.NotImplemented;
 
 import com.hp.hpl.jena.datatypes.*;
@@ -28,6 +31,8 @@ public class genericIndex extends PropertyFunctionEval
     {
     public genericIndex() 
         { super(PropFuncArgType.PF_ARG_SINGLE, PropFuncArgType.PF_ARG_LIST); }
+
+    Log log = LogFactory.getLog(genericIndex.class);
     
     private String indexTerm;
     private String indexFullName;
@@ -35,6 +40,7 @@ public class genericIndex extends PropertyFunctionEval
     
     @Override public void build(PropFuncArg argSubject, Node predicate, PropFuncArg argObject, ExecutionContext execCxt)
          {
+         log.trace("build");
          super.build( argSubject, predicate, argObject, execCxt );
          List<Node> objects = argObject.getArgList();
          enableIndex( execCxt, predicate.getURI(), objects.get(0).getLiteralLexicalForm() );
@@ -42,12 +48,15 @@ public class genericIndex extends PropertyFunctionEval
 
     private void enableIndex( ExecutionContext c, String URI, String term ) 
         {
+        log.trace("enableIndex: URI "+URI+", term "+term);
         String dir = c.getContext().getAsString( Symbol.create( URI ) );
         if (dir == null)
             throw new QueryBuildException( "no value supplied for composite index directory for predicate " + URI );
+        log.trace("enableIndex: dir "+dir);
         indexDir = dir;
         indexTerm = term;
         indexFullName = indexDir + "/" + indexTerm;
+        log.trace("enableIndex: indexFullName "+indexFullName);
         }
 
     @Override public QueryIterator execEvaluated
