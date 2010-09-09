@@ -32,10 +32,10 @@ public class Sparqlite
             PropertyMap pf = getPropertyMap( root );
             boolean defaultGraphIsUnion = getDefaultGraphIsUnion( root );
             log.trace( "creating new Sparqlite with root " + root + " and transforms " + ts );
-            log.trace( "- indexMap " + im );
+            log.trace( "- indexMap:");
             for (String predicate: im.keySet())
                 log.trace( "- "+predicate+" -> "+im.getDirectoryFor( predicate ) );
-            log.trace( "- propertyMap " + pf );
+            log.trace( "- propertyMap:");
             for (String predicate: pf.keySet())
                 log.trace( "- "+predicate+" -> "+pf.get( predicate ) );
             return new Sparqlite( root, ts, im, pf, defaultGraphIsUnion );
