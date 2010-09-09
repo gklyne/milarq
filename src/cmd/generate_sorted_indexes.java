@@ -29,10 +29,12 @@ public class generate_sorted_indexes
        
     generate_sorted_indexes( String [] args )
         {
-        CommandArgs a = CommandArgs.parse( "-indexes -ug", args );
+        CommandArgs a = CommandArgs.parse( "-indexes -ug -nb -na", args );
         if (a.bad()) throw new IllegalArgumentException( a.messages().toString() );
         indexDir = a.getOptional( "-indexes", "indexes" );
         useGenericFormat = asBoolean( a.getOptional( "-ug", "false" ) );
+        notBeforeOnly = asBoolean( a.getOptional( "-nb", "false" ) );
+        notAfterOnly = asBoolean( a.getOptional( "-na", "false" ) );
         }
     
     public static final Pattern True = Pattern.compile( "^(true|t|yes)$", Pattern.CASE_INSENSITIVE );
@@ -47,6 +49,8 @@ public class generate_sorted_indexes
 
     final String indexDir;
     final boolean useGenericFormat;
+    final boolean notBeforeOnly;
+    final boolean notAfterOnly;
     
     static class Element
         {
@@ -95,10 +99,23 @@ public class generate_sorted_indexes
 
     private void outputIndex( String currentTerm, List<Element> elementsForCurrentTerm ) throws IOException
         {
-        Collections.sort( elementsForCurrentTerm, byEarliestDate );
-        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm + "-nb" ) );
-        Collections.sort( elementsForCurrentTerm, reversedByLatestDate );
-        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm + "-na" ) );
+    	if (notBeforeOnly)
+    	    {
+            Collections.sort( elementsForCurrentTerm, byEarliestDate );
+	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm ) );    		
+    	    }
+    	else if (notAfterOnly)
+    	    {
+            Collections.sort( elementsForCurrentTerm, reversedByLatestDate );
+	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm ) );    		
+    	    }
+    	else
+	    	{
+            Collections.sort( elementsForCurrentTerm, byEarliestDate );
+	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm + "-nb" ) );
+	        Collections.sort( elementsForCurrentTerm, reversedByLatestDate );
+	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm + "-na" ) );
+	    	}
         }
 
     private void writeIndexFile( List<Element> elementsForCurrentTerm, File target ) throws FileNotFoundException
