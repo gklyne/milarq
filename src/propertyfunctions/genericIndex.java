@@ -55,7 +55,7 @@ public class genericIndex extends PropertyFunctionEval
         log.trace("enableIndex: dir "+dir);
         indexDir = dir;
         indexTerm = term;
-        indexFullName = indexDir + "/" + indexTerm;
+        indexFullName = indexDir + "/" + indexTerm.toLowerCase();
         log.trace("enableIndex: indexFullName "+indexFullName);
         }
 
