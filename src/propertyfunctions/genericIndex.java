@@ -40,7 +40,6 @@ public class genericIndex extends PropertyFunctionEval
     
     @Override public void build(PropFuncArg argSubject, Node predicate, PropFuncArg argObject, ExecutionContext execCxt)
          {
-         log.trace("build");
          super.build( argSubject, predicate, argObject, execCxt );
          List<Node> objects = argObject.getArgList();
          enableIndex( execCxt, predicate.getURI(), objects.get(0).getLiteralLexicalForm() );
@@ -100,7 +99,7 @@ public class genericIndex extends PropertyFunctionEval
                 for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
                 current = readLine( in );
                 if (current == null) close();
-                System.err.println( ">> gi: returning " + b );
+                ////TODO: remove? System.err.println( ">> gi: returning " + b );
                 return b;
                 }
 
