@@ -22,6 +22,12 @@ public class generate_sorted_indexes
             { return a.notAfter - b.notAfter; }
         };
 
+    private static final Comparator<Element> bySubject = new Comparator<Element>()
+        {
+        @Override public int compare( Element a, Element b )
+            { return a.subject.compareTo(b.subject); }
+        };
+
     public static void main( String [] args ) throws IOException
         {
         new generate_sorted_indexes( args ).run();
@@ -29,12 +35,14 @@ public class generate_sorted_indexes
        
     generate_sorted_indexes( String [] args )
         {
-        CommandArgs a = CommandArgs.parse( "-indexes -ug -nb -na", args );
+        CommandArgs a = CommandArgs.parse( "-indexes -ug -nb -na -subj", args );
         if (a.bad()) throw new IllegalArgumentException( a.messages().toString() );
         indexDir = a.getOptional( "-indexes", "indexes" );
         useGenericFormat = asBoolean( a.getOptional( "-ug", "false" ) );
         notBeforeOnly = asBoolean( a.getOptional( "-nb", "false" ) );
         notAfterOnly = asBoolean( a.getOptional( "-na", "false" ) );
+        // if -subj is specified, only two columns of input data are expected
+        subjectOnly = asBoolean( a.getOptional( "-subj", "false" ) );
         }
     
     public static final Pattern True = Pattern.compile( "^(true|t|yes)$", Pattern.CASE_INSENSITIVE );
@@ -51,6 +59,7 @@ public class generate_sorted_indexes
     final boolean useGenericFormat;
     final boolean notBeforeOnly;
     final boolean notAfterOnly;
+    final boolean subjectOnly;
     
     static class Element
         {
@@ -73,7 +82,12 @@ public class generate_sorted_indexes
             String [] line = r.readNext();
             if (line == null) break;
             String term = line[0], subject = line[1];
-            int notBefore = dateInteger( line[2] ), notAfter = dateInteger( line[3] );
+            int notBefore = 0, notAfter = 0;
+            if (!subjectOnly)
+	            {
+	            notBefore = dateInteger( line[2] );
+	            notAfter  = dateInteger( line[3] );
+	            }
             if (!term.equals( currentTerm ))
                 {
                 if (currentTerm.length() > 0) outputIndex( currentTerm, elementsForCurrentTerm );
@@ -109,6 +123,11 @@ public class generate_sorted_indexes
             Collections.sort( elementsForCurrentTerm, reversedByLatestDate );
 	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm ) );    		
     	    }
+    	else if (subjectOnly)
+		    {
+	        Collections.sort( elementsForCurrentTerm, bySubject );
+	        writeIndexFile( elementsForCurrentTerm, new File( indexDir, currentTerm ) );    		
+		    }
     	else
 	    	{
             Collections.sort( elementsForCurrentTerm, byEarliestDate );
@@ -132,11 +151,14 @@ public class generate_sorted_indexes
                 }
             else
                 ps.print( e.subject );
-            ps.print( "," );
-            ps.print( e.notBefore );
-            ps.print( "," );
-            ps.print( e.notAfter );
-            ps.println();
+            if (!subjectOnly)
+	            {
+	            ps.print( "," );
+	            ps.print( e.notBefore );
+	            ps.print( "," );
+	            ps.print( e.notAfter );
+	            }
+	        ps.println();
             }
         ps.flush();
         ps.close();
