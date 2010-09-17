@@ -169,7 +169,6 @@ public class genericIndex extends PropertyFunctionEval
     */
     private BufferedReader inFromFile(String indexFullName) 
         {
-        String indexFullNameLC = indexFullName.toLowerCase();
         try 
             { return new BufferedReader( new FileReader( new File( indexFullName ) ) ); } 
         catch (FileNotFoundException e) 
