@@ -165,10 +165,10 @@ public class genericIndex extends PropertyFunctionEval
         {
         String indexFullNameLC = indexFullName.toLowerCase();
         try 
-            { return new BufferedReader( new FileReader( new File( indexFullNameLC ) ) ); } 
+            { return new BufferedReader( new FileReader( new File( indexFullName ) ) ); } 
         catch (FileNotFoundException e) 
             {
-            log.warn( "could not find index file " +  indexFullNameLC + ": no bindings created" );
+            log.warn( "could not find index file " +  indexFullName + ": no bindings created" );
             return new BufferedReader( new EmptyReader() );
             }
         }
