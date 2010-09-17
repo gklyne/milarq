@@ -197,7 +197,7 @@ public class genericIndex extends PropertyFunctionEval
         @Override public Binding next() 
             {            
             if (!hasNext()) throw new NoSuchElementException();
-            int i = 0;
+            int i = 1;
             String [] elements = current.split( "," );
             Binding b = binding;
             for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
