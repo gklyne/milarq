@@ -154,11 +154,31 @@ public class genericIndex extends PropertyFunctionEval
         catch (IOException e) { throw new WrappedIOException( e ); }
         }
 
+    /**
+         Open a buffered reader over the file named by indexFullName,
+         converted to lower case (because all terms are lower case).
+         If the file does not exist, an empty reader is returned and
+         a message logged, rather than throwing an exception (ie the
+         query will fail cleanly).
+    */
     private BufferedReader inFromFile(String indexFullName) 
         {
-        try { return new BufferedReader( new FileReader( new File( indexFullName ) ) ); } 
-        catch (FileNotFoundException e) { throw new RuntimeException( e ); }
+        String indexFullNameLC = indexFullName.toLowerCase();
+        try 
+            { return new BufferedReader( new FileReader( new File( indexFullNameLC ) ) ); } 
+        catch (FileNotFoundException e) 
+            {
+            log.warn( "could not find index file " +  indexFullNameLC + ": no bindings created" );
+            return new BufferedReader( new EmptyReader() );
+            }
         }
     
+    static class EmptyReader extends Reader
+        {
+        @Override public int read( char[] cbuf, int off, int len ) 
+            { return -1; }
 
+        @Override public void close() throws IOException
+            {}
+        }   
     }

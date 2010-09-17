@@ -29,9 +29,9 @@ public class generic_indexing_example
     
     public void run() throws IOException
         {
+        Sparqlite s = createSparqlite();
         createIndexFile();
         Dataset d = createTDB();
-        Sparqlite s = createSparqlite();
         s.registerPropertyFunctions();
         Config c = s.getConfig( "fakePathInfo", PathMapper.Create.usePrefix( "MUN" ) );
         String queryString =
@@ -143,6 +143,10 @@ public class generic_indexing_example
             .addProperty( Vocab.matches, ".*" )
             .addProperty( Vocab.replacement, "http://example.com/x/replacement/%s" )
             ;
+        m.setNsPrefix( "ja", "http://jena.hpl.hp.com/2005/11/Assembler#>" );
+        m.setNsPrefix( "tdb", "http://jena.hpl.hp.com/2008/tdb#" );
+        m.setNsPrefix( "lite", "http://purl.org/net/sparqlite/vocab#" );
+        m.write( System.out, "TTL" );
         return root;
         }
     
