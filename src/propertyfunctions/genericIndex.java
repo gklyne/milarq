@@ -161,8 +161,7 @@ public class genericIndex extends PropertyFunctionEval
         }
 
     /**
-         Open a buffered reader over the file named by indexFullName,
-         converted to lower case (because all terms are lower case).
+         Open a buffered reader over the file named by indexFullName.
          If the file does not exist, an empty reader is returned and
          a message logged, rather than throwing an exception (ie the
          query will fail cleanly).
