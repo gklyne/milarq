@@ -1,0 +1,19 @@
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm:     <http://purl.org/NET/crm-owl#>
+PREFIX claros:  <http://purl.org/NET/Claros/vocab#>
+PREFIX pf:      <http://jena.hpl.hp.com/ARQ/property#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT { ?s claros:subject-not-before ?nb ; claros:subject-not-after ?na }
+ WHERE
+    { GRAPH ?g
+      {
+      ?s crm:P108I.was_produced_by
+        [ crm:P4.has_time-span
+            [ crm:P82.at_some_time_within
+                [ claros:not_before ?nb ; claros:not_after ?na ]
+            ]
+        ].
+      }
+    } 

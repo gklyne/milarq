@@ -1,0 +1,119 @@
+This (draft) document describes how to configure a revised Sparqlite
+system to use augmented indexes for faster lookup.
+
+The revised configuration has required extensive changes to the configuration
+aspects of Sparqlite -- it is not just a drop-in solution. However the code
+is based on sparqlite-20090309-0.4-claros and passes the same tests once it is
+set up.
+
+(1) the Init servlet
+
+The new Init servlet in the .config package is invoked at server start
+according to the web.xml file load-on-startup element. It has two init
+params: 
+
+  uk.ac.ox.zoo.sparqlite.config
+  uk.ac.ox.zoo.sparqlite.root
+  
+The first init param's value must be the name of an RDF file containing
+the assembler description of the sparqlite configuration. In the example
+it is
+
+  WEB-INF/sparqlite-assembly.ttl
+  
+The second init parameter's value is the URL naming the configuration root
+in that assembler file: in the example it is 
+  
+  http://purl.org/net/sparqlite/vocab#root
+  
+(2) Sparqlite assembler descriptions
+
+The example assembler file looks like:
+
+    # Sparqlite assembly file.
+    #
+    # created by chris for milarq
+    #
+    @prefix tdb:    <http://jena.hpl.hp.com/2008/tdb#>.
+    @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+    @prefix ja:     <http://jena.hpl.hp.com/2005/11/Assembler#>.
+    @prefix lite:   <http://purl.org/net/sparqlite/vocab#>.
+    
+    lite:root a lite:Sparqlite
+        ; lite:mapIf [lite:matches ".*"; lite:replacement "WEB-INF/tdb/%s.ttl"]
+        .
+ 
+ Note the matchup of lite:root and the value of the root init param. The
+ assembler defines a /Sparqlite object/, as in the .config.Sparqlite class,
+ which contains the configuration information for this sparqlite server.
+ Init keeps that Sparqlite object as a static variable and allows access to
+ it with the getSparqlite() static method.
+ 
+ (3) converting path info to assembler descriptions
+ 
+ When ServletTDB is invoked by a GET on the Sparqlite server, it requests
+ the Sparqlite object to create a Config specialised to this request, by
+ passing it the path info of the request and a PathMapper constructed from
+ the servelet context. 
+ 
+   (The PathMapper maps from "incomplete" paths to "full" paths. A
+    PathMapper constructed from a ServletContext just calls getRealPath,
+    but for testing purposes it's much simpler to be able to pass in
+    specialised PathMappers than it is to attempt to construct a suitable
+    ServletContext.)
+   
+This specialised Config is passed to the EndpointTDB constructor, which 
+retains it until it needs a queryable dataset.
+ 
+ When it does so, it must convert the path info provided into another assembler
+ model which describes the dataset to use in the query. The path info is
+ presented to all the mapIf entries in the Sparqlite assembler file. If the
+ lite:matches regular expression matches the path info, then it is replaced
+ by the lite:replacement string with %-insertions:
+ 
+    %p  the last component of the path info with any .suffix dropped
+    %q  the last component of the path info, retaining any .suffix
+    %r  the first component of the path, dropping any .suffix
+    %s  the entire path info
+    
+This replacement string is used to find an RDF model describing the dataset.
+If the string does not "look like" an HTTP URL, then it is used as a filename
+and the RDF file named by that filename is loaded. If the replacement
+string does look like a URL, then 
+
+(a) a resource with that name should be the value of a lite:sparqliteDataset
+    property of the Sparqlite root;
+
+(b) the dataset is constructed using the properties of that resource in that
+    assembler description.
+    
+Thus a single assembler file can be used to define all of the datasets
+required, or parts of it can be carved out into separate files. (But note
+that assembler files can themselves include other assembler models by
+reference.)
+
+(4) Additional indexes
+
+The additional indexes required by the compositeIndex property function
+live in a single directory. To configure that directory, use an additional
+property of the sparqlite root
+
+  lite:compositeIndexDirectory "dirName"
+  
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

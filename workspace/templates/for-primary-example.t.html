@@ -1,0 +1,178 @@
+<html>
+<head>
+<title>some results</title>
+<link href='styles/results.css' rel='stylesheet' type='text/css'></link>
+</head>
+<body>
+
+<div define="show-test-instance">
+	<div for='?instance {?instance rdf:type tf:TestInstance; tf:withLabel "%!label!"}'>
+	  <blockquote>
+	    <h3><span val="%!label!"></span></h3>
+	    <pre><span val="?instance.tf:withQuery|stripPrefixes"></span>
+	    </pre>
+	  </blockquote>
+	  <table class="framed">
+	    <thead>
+	      <th>iteration</th>
+	      <th>time (sec)</th>
+	      <th>rows</th>
+	    </thead>
+	
+	    <tr for="?iteration {?instance tf:iteration ?iteration. ?iteration tf:index ?index} ORDER BY (?index)">
+	      <td><span val="?iteration.tf:index|usual"/></span></td>
+	      <td><span val="?iteration.tf:timeInMs|div1000"/></span></td>
+	      <td>
+	        <table>
+	          <thead>
+	            <tr>
+	              <th for="?var {?instance tf:queryVar ?var}"><span val="?var"></span></th>
+	            </tr>
+	          </thead>
+	          <tr for="?row {?iteration tf:resultRow ?row}">
+	            <td for="?val {?instance tf:queryVar ?var. ?row tf:binding [tf:varName ?var; tf:varValue ?val]}">
+	              <span val="?val"></span>
+	            </td>
+	          </tr>
+	        </table>
+	      </td>
+	    </tr>
+	
+	  </table>
+	</div>
+</div>
+
+<h1>indexing for text search in Claros using ARQ and TDB</h1>
+
+<p>
+Our base query is (omitting the usual prefixes)
+</p>
+
+
+<div insert="show-test-instance">
+  <div arg="label">orig-early-athens-query</div>
+</div>
+
+<p>
+There are three critical parts of the query, the rest being
+scaffolding. They are:
+
+  <ul>
+    <li>
+        the use of the property function <code>textMatch</code> to find
+        literals containing the search term <b>athens</b> and hence those
+        subjects mentioning <b>athens</b> in their associated text.
+    </li>
+    <li>
+        the terms around crm:E22.Man-Made_Object identifying the subjects
+        as being <b>Pottery</b>.
+    </li>
+    <li>
+        the combination of the extraction of the earliest-known date
+        <b>?early</b> for the subjects with the ORDER BY/LIMIT 1 clauses
+        finding a subject with the earliest earliest-known date.
+    </li>
+  </ul>
+
+By promoting these critical terms to top level so that the ARQ engine
+does not have to explore a deep triple graph, we can reduce this to:
+
+<div insert="show-test-instance">
+  <div arg="label">forced-order-textMatch</div>
+</div>
+
+<p>The <b>fast:</b> properties are the promoted versions of the embedded
+properties in the original query. (Because these integer-valued properties
+can be sorted directly by ARQ, we can eliminate the cast to xsd:integer).
+</p>
+
+<p>
+A significant amount of time is consumed by the ORDER BY part of the
+query, as we can see by eliminating it; this shows us how much work 
+we can hope to avoid by avoiding an explicit sort, and how much remains
+even if we don't use an explicit sort. (The answers are of course wrong.)
+</p>
+
+<div insert="show-test-instance">
+  <div arg="label">no-order-textMatch</div>
+</div>
+
+<p>
+Now that the dates are represented as
+plain integers, TDB will represent them as inline tagged values, and
+they will appear in date order in the TDB indexes.
+</p>
+
+<p>
+We can exploit this by ensuring that the basic graph pattern that
+delivers the bindings for the <b>?early</b> variable comes first.
+By a current accident of implementation (which we will enforce by
+code changes if necessary), it is sufficient to place the not-before
+triple first and remove the ORDER BY:
+</p>
+
+<div insert="show-test-instance">
+  <div arg="label">athens-by-early-then-textMatch</div>
+</div>
+
+<p>
+Unfortunately, we have replaced
+one timing problem with another one: the <b>textMatch</b>
+which generates literals containing "athens" now runs <i>for every
+subject with an <b>?early</b> date</i>. 
+</p>
+
+<p>
+What we really want is to have something -- and by "something", we will
+mean a property function -- which delivers in order of earliest date all
+and only the subjects matching <b>athens</b> (or whatever the search term 
+may be). We can precompute a table which maps the search terms of all the
+literals in the data to an ordered list of subjects-by-date: a convenient
+representation for experiment is to use the search terms to name files in
+a known directory, with each file having "date, subject" lines and
+being ordered by date. Our new property function then selects a file
+by term and runs through the lines in order.
+</p>
+
+
+<div insert="show-test-instance">
+  <div arg="label">composite-adhoc-index</div>
+</div>
+
+<p>
+We see from the timings that this approach is dramatically faster than
+any of the ones that we have tried before, despite its <i>ad-hoc</i>
+nature. However, where possible we should use existing technology (ie,
+code we don't have to maintain). Lucene can maintain multiple indexes
+for is (generally free-text) data because each Lucene document has
+multiple indexable fields.
+</p>
+
+<p>
+We can replace our <i>ad-hoc</i> index by using Lucene and associating
+with each document not only its Lucene-derived search term but also
+its earliest-known (and, in anticipation, its latest-known) dates.
+A Lucene property function can request its index terms be delivered
+in order using its <b>Sort</b> objects.
+</p>
+
+<div insert="show-test-instance">
+  <div arg="label">multiple-lucene-index</div>
+</div>
+
+<p>
+Sadly, when we try this, the performance is not good, because (as it
+turns out) the Lucene sorting is done at run-time, that is, all the
+matching (by search term) records are read and then sorted on the
+date. This means that it always has to sort all the records, despite
+only one being needed -- one of the sources of slowness in our first
+example.
+</p>
+
+<p>
+Our tentative conclusion is that for these purposes the <i>ad-hoc</i>
+index is a reasonable solution.
+</p>
+
+</body>
+</html>

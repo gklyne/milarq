@@ -1,0 +1,596 @@
+<html> <head>
+  <title>some results</title>
+  <link></link>
+ </head>
+ <body>
+  <></>
+  <h1>indexing for text search in Claros using ARQ and TDB</h1>
+  <p>Our base query is (omitting the usual prefixes)</p>
+  <div>
+   <div>
+    <blockquote>
+     <h3>orig-early-athens-query</h3>
+     <pre>
+SELECT ?g ?s ?t ?early ?late WHERE
+{ GRAPH ?g
+  {
+    { ?lit pf:textMatch  "athens"  . }
+    { ?s claros:hasLiteral ?lit . }
+    {
+      ?s rdf:type crm:E22.Man-Made_Object ;
+        crm:P2.has_type
+          [ rdf:type crm:E55.Type ;
+            crm:P127.has_broader_term claros:ObjectType ;
+            rdf:value  "Pottery"  ;
+          ] .
+    }
+    {
+      ?s crm:P108I.was_produced_by
+        [ rdf:type crm:E12.Production ;
+          crm:P4.has_time-span
+            [ rdf:type crm:E52.Time-Span ;
+              crm:P82.at_some_time_within
+                [ rdf:type crm:E61.Time_Primitive ;
+                  claros:not_before ?early ;
+                  claros:not_after  ?late ;
+                ]
+            ]
+        ] .
+    }
+    { ?s rdf:type ?t . }
+  }
+} 
+ORDER BY ASC (xsd:integer(?early)) 
+LIMIT 1     </pre>
+    </blockquote>
+    <table>
+     <thead>
+      <tr><th>iteration</th><th>time (sec)</th><th>rows</th></tr>
+      <tr>
+       <td>0</td>
+       <td>6.273</td>
+       <td>
+        <table>
+         <thead>
+          <tr>
+           <th>t</th>
+           <th>g</th>
+           <th>late</th>
+           <th>early</th>
+           <th>s</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>crm:E22.Man-Made_Object</td>
+           <td>graph:beazley-pottery</td>
+           <td>-675</td>
+           <td>-725</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>1</td>
+       <td>5.557</td>
+       <td>
+        <table>
+         <thead>
+          <tr>
+           <th>t</th>
+           <th>g</th>
+           <th>late</th>
+           <th>early</th>
+           <th>s</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>crm:E22.Man-Made_Object</td>
+           <td>graph:beazley-pottery</td>
+           <td>-675</td>
+           <td>-725</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>2</td>
+       <td>5.541</td>
+       <td>
+        <table>
+         <thead>
+          <tr>
+           <th>t</th>
+           <th>g</th>
+           <th>late</th>
+           <th>early</th>
+           <th>s</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>crm:E22.Man-Made_Object</td>
+           <td>graph:beazley-pottery</td>
+           <td>-675</td>
+           <td>-725</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>3</td>
+       <td>5.099</td>
+       <td>
+        <table>
+         <thead>
+          <tr>
+           <th>t</th>
+           <th>g</th>
+           <th>late</th>
+           <th>early</th>
+           <th>s</th>
+          </tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>crm:E22.Man-Made_Object</td>
+           <td>graph:beazley-pottery</td>
+           <td>-675</td>
+           <td>-725</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+     </thead>
+    </table>
+   </div>
+  </div>
+  <p>
+There are three critical parts of the query, the rest being
+scaffolding. They are:   <ul>
+    <li>
+the use of the property function     <code>textMatch</code>
+to find
+        literals containing the search term     <b>athens</b>
+and hence those
+        subjects mentioning     <b>athens</b>
+in their associated text.    </li>
+    <li>
+the terms around crm:E22.Man-Made_Object identifying the subjects
+        as being     <b>Pottery</b>
+.    </li>
+    <li>
+the combination of the extraction of the earliest-known date     <b>?early</b>
+for the subjects with the ORDER BY/LIMIT 1 clauses
+        finding a subject with the earliest earliest-known date.    </li>
+   </ul>
+<p>By promoting these critical terms to top level so that the ARQ engine
+does not have to explore a deep triple graph, we can reduce this to:  </p>
+  <div>
+   <div>
+    <blockquote>
+     <h3>forced-order-textMatch</h3>
+     <pre>
+SELECT ?g ?s ?early ?late WHERE
+{ GRAPH ?g
+  { ?lit pf:textMatch "athens". ?s claros:hasLiteral ?lit. }
+    ?s claros:subject-not-before ?early.
+    ?s claros:subject-has-type "Pottery".
+    ?s claros:subject-not-after ?late.
+} 
+ORDER BY ASC (?early) 
+LIMIT 1     </pre>
+    </blockquote>
+    <table>
+     <thead>
+      <tr><th>iteration</th><th>time (sec)</th><th>rows</th></tr>
+      <tr>
+       <td>0</td>
+       <td>4.721</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>s</th><th>g</th><th>early</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-675</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+           <td>graph:beazley-pottery</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>1</td>
+       <td>2.745</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>s</th><th>g</th><th>early</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-675</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+           <td>graph:beazley-pottery</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>2</td>
+       <td>2.794</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>s</th><th>g</th><th>early</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-675</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+           <td>graph:beazley-pottery</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>3</td>
+       <td>2.681</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>s</th><th>g</th><th>early</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-675</td>
+           <td>bz:9963076B-E863-4260-B5DD-9CA8D4352730</td>
+           <td>graph:beazley-pottery</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+     </thead>
+    </table>
+   </div>
+  </div>
+The  <b>fast:</b>
+properties are the promoted versions of the embedded
+properties in the original query. (Because these integer-valued properties
+can be sorted directly by ARQ, we can eliminate the cast to xsd:integer).  <p></p>
+  <p>
+A significant amount of time is consumed by the ORDER BY part of the
+query, as we can see by eliminating it; this shows us how much work 
+we can hope to avoid by avoiding an explicit sort, and how much remains
+even if we don't use an explicit sort. (The answers are of course wrong.)  </p>
+  <div>
+   <div>
+    <blockquote>
+     <h3>no-order-textMatch</h3>
+     <pre>
+SELECT ?g ?s ?early ?late WHERE
+{ GRAPH ?g
+  { ?lit pf:textMatch "athens". ?s claros:hasLiteral ?lit. }
+  ?s claros:subject-not-before ?early.
+  ?s claros:subject-has-type "Pottery".
+  ?s claros:subject-not-after ?late.
+}
+LIMIT 1     </pre>
+    </blockquote>
+    <table>
+     <thead>
+      <tr><th>iteration</th><th>time (sec)</th><th>rows</th></tr>
+      <tr>
+       <td>0</td>
+       <td>0.0050</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>early</th><th>s</th><th>g</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-425</td>
+           <td>-475</td>
+           <td>bz:4FE2E179-1521-43E7-98FC-73142C85A607</td>
+           <td>graph:beazley-pottery</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>1</td>
+       <td>0.0040</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>early</th><th>s</th><th>g</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-425</td>
+           <td>-475</td>
+           <td>bz:4FE2E179-1521-43E7-98FC-73142C85A607</td>
+           <td>graph:beazley-pottery</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>2</td>
+       <td>0.0040</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>early</th><th>s</th><th>g</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-425</td>
+           <td>-475</td>
+           <td>bz:4FE2E179-1521-43E7-98FC-73142C85A607</td>
+           <td>graph:beazley-pottery</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>3</td>
+       <td>0.0030</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>late</th><th>early</th><th>s</th><th>g</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>-425</td>
+           <td>-475</td>
+           <td>bz:4FE2E179-1521-43E7-98FC-73142C85A607</td>
+           <td>graph:beazley-pottery</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+     </thead>
+    </table>
+   </div>
+  </div>
+  <p>
+Now that the dates are represented as
+plain integers, TDB will represent them as inline tagged values, and
+they will appear in date order in the TDB indexes.  </p>
+  <p>
+We can exploit this by ensuring that the basic graph pattern that
+delivers the bindings for the   <b>?early</b>
+variable comes first.
+By a current accident of implementation (which we will enforce by
+code changes if necessary), it is sufficient to place the not-before
+triple first and remove the ORDER BY:  </p>
+  <div></div>
+  <p>
+Unfortunately, we have replaced
+one timing problem with another one: the   <b>textMatch</b>
+which generates literals containing "athens" now runs   <i>for every
+subject with an<b>?early</b>date</i>
+.  </p>
+  <p>
+What we really want is to have something -- and by "something", we will
+mean a property function -- which delivers in order of earliest date all
+and only the subjects matching   <b>athens</b>
+(or whatever the search term 
+may be). We can precompute a table which maps the search terms of all the
+literals in the data to an ordered list of subjects-by-date: a convenient
+representation for experiment is to use the search terms to name files in
+a known directory, with each file having "date, subject" lines and
+being ordered by date. Our new property function then selects a file
+by term and runs through the lines in order.  </p>
+  <div>
+   <div>
+    <blockquote>
+     <h3>composite-adhoc-index</h3>
+     <pre>
+SELECT ?g ?s ?early ?late WHERE
+{
+  ?s cpf:compositeIndex ("athens" ?early ?late).
+  ?s claros:subject-has-type "Pottery".
+  GRAPH ?g { ?s rdf:type ?ignored }
+} 
+LIMIT 1     </pre>
+    </blockquote>
+    <table>
+     <thead>
+      <tr><th>iteration</th><th>time (sec)</th><th>rows</th></tr>
+      <tr>
+       <td>0</td>
+       <td>0.465</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>early</th><th>g</th><th>late</th><th>s</th></tr>
+         </thead>
+         <tbody></tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>1</td>
+       <td>0.115</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>early</th><th>g</th><th>late</th><th>s</th></tr>
+         </thead>
+         <tbody></tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>2</td>
+       <td>0.113</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>early</th><th>g</th><th>late</th><th>s</th></tr>
+         </thead>
+         <tbody></tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>3</td>
+       <td>0.127</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>early</th><th>g</th><th>late</th><th>s</th></tr>
+         </thead>
+         <tbody></tbody>
+        </table>
+       </td>
+      </tr>
+     </thead>
+    </table>
+   </div>
+  </div>
+  <p>
+We see from the timings that this approach is dramatically faster than
+any of the ones that we have tried before, despite its   <i>ad-hoc</i>
+nature. However, where possible we should use existing technology (ie,
+code we don't have to maintain). Lucene can maintain multiple indexes
+for is (generally free-text) data because each Lucene document has
+multiple indexable fields.  </p>
+  <p>
+We can replace our   <i>ad-hoc</i>
+index by using Lucene and associating
+with each document not only its Lucene-derived search term but also
+its earliest-known (and, in anticipation, its latest-known) dates.
+A Lucene property function can request its index terms be delivered
+in order using its   <b>Sort</b>
+objects.  </p>
+  <div>
+   <div>
+    <blockquote>
+     <h3>multiple-lucene-index</h3>
+     <pre>
+SELECT ?s ?earliest ?latest WHERE
+{  
+  ?s cpf:multipleIndex ("athens" ?earliest ?latest).
+  ?s claros:subject-has-type "Pottery".
+} 
+LIMIT 1     </pre>
+    </blockquote>
+    <table>
+     <thead>
+      <tr><th>iteration</th><th>time (sec)</th><th>rows</th></tr>
+      <tr>
+       <td>0</td>
+       <td>0.271</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>latest</th><th>s</th><th>earliest</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>675</td>
+           <td>bz:7494DB4E-8610-412D-9C74-01068D44A06C</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>1</td>
+       <td>0.082</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>latest</th><th>s</th><th>earliest</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>675</td>
+           <td>bz:7494DB4E-8610-412D-9C74-01068D44A06C</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>2</td>
+       <td>0.081</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>latest</th><th>s</th><th>earliest</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>675</td>
+           <td>bz:7494DB4E-8610-412D-9C74-01068D44A06C</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+      <tr>
+       <td>3</td>
+       <td>0.081</td>
+       <td>
+        <table>
+         <thead>
+          <tr><th>latest</th><th>s</th><th>earliest</th></tr>
+         </thead>
+         <tbody>
+          <tr>
+           <td>675</td>
+           <td>bz:7494DB4E-8610-412D-9C74-01068D44A06C</td>
+           <td>-725</td>
+          </tr>
+         </tbody>
+        </table>
+       </td>
+      </tr>
+     </thead>
+    </table>
+   </div>
+  </div>
+  <p>
+Sadly, when we try this, the performance is not good, because (as it
+turns out) the Lucene sorting is done at run-time, that is, all the
+matching (by search term) records are read and then sorted on the
+date. This means that it always has to sort all the records, despite
+only one being needed -- one of the sources of slowness in our first
+example.  </p>
+  <p>
+Our tentative conclusion is that for these purposes the   <i>ad-hoc</i>
+index is a reasonable solution.  </p>
+ </body>
+</html>

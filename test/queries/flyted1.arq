@@ -1,0 +1,29 @@
+PREFIX : <http://purl.org/net/flyted/schema/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT (count(distinct ?image) AS ?count) WHERE {
+?image a :Image .
+OPTIONAL { ?image :genotype ?genotype }
+OPTIONAL { ?image :thumbnail ?thumbnail }
+OPTIONAL { ?image :probe ?probe }
+OPTIONAL { ?image :expression ?expression }
+OPTIONAL { ?image rdfs:seeAlso ?seealso }
+OPTIONAL { ?image :objective ?objective }
+OPTIONAL { ?image :optivar ?optivar }
+OPTIONAL { ?image :stage ?stage }
+OPTIONAL { ?image :apical ?apical }
+OPTIONAL { ?image :probeConcentration ?concentration }
+OPTIONAL { ?image rdfs:label ?label FILTER (regex(str(?label), 'foo', 'i')) }
+OPTIONAL { ?image rdfs:label ?label FILTER (regex(str(?label), 'bar', 'i')) }
+OPTIONAL { ?image rdfs:label ?label FILTER (regex(str(?label), '.*wt.*', 'i')) }
+OPTIONAL { ?image :genotype ?genotype1, ?genotype2 }
+OPTIONAL { ?image :thumbnail ?thumbnail1, ?thumbnail2 }
+OPTIONAL { ?image :probe ?probe1, ?probe2 }
+OPTIONAL { ?image :expression ?expression1, ?expression2 }
+FILTER (
+(?genotype1 != ?genotype2) ||
+(?thumbnail1 != ?thumbnail2) ||
+(?probe1 != ?probe2) ||
+(?expression1 != ?expression2)
+)
+FILTER ( !bound(?apical) || !bound(?stage) || !bound(?objective) || !bound(?optivar) || !bound(?contentration) || !bound(?genotype) || !bound(?thumbnail) || !bound(?probe) || !bound(?expression) || !bound(?seealso) )
+}
