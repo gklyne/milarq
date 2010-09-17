@@ -30,7 +30,7 @@ import com.hp.hpl.jena.sparql.util.Symbol;
 public class genericIndex extends PropertyFunctionEval
     {
     public genericIndex() 
-        { super(PropFuncArgType.PF_ARG_SINGLE, PropFuncArgType.PF_ARG_LIST); }
+        { super(PropFuncArgType.PF_ARG_SINGLE, PropFuncArgType.PF_ARG_EITHER ); }
 
     Log log = LogFactory.getLog(genericIndex.class);
     
