@@ -41,7 +41,7 @@ public class genericIndex extends PropertyFunctionEval
     @Override public void build(PropFuncArg argSubject, Node predicate, PropFuncArg argObject, ExecutionContext execCxt)
          {
          super.build( argSubject, predicate, argObject, execCxt );
-         List<Node> objects = argObject.getArgList();
+         List<Node> objects = asList( argObject );
          enableIndex( execCxt, predicate.getURI(), objects.get(0).getLiteralLexicalForm() );
          }
 
@@ -58,6 +58,12 @@ public class genericIndex extends PropertyFunctionEval
         log.trace("enableIndex: indexFullName "+indexFullName);
         }
 
+    private List<Node> asList( PropFuncArg arg )
+        { return arg.isList() ? arg.getArgList() : list( arg.getArg() ); }
+    
+    private <T> List<T> list( T ... args )
+        { return Arrays.asList( args ); }
+    
     @Override public QueryIterator execEvaluated
         ( final Binding binding
         , PropFuncArg argSubject
@@ -66,7 +72,7 @@ public class genericIndex extends PropertyFunctionEval
         , ExecutionContext execCxt
         ) 
         {
-        List<Node> objects = argObject.getArgList();
+        List<Node> objects = asList( argObject );
         final Var VS = Var.alloc(argSubject.getArg()); 
         final List<Var> vars = new ArrayList<Var>();
         for (Node v: objects.subList( 1, objects.size() ) ) vars.add( Var.alloc( v ) );
