@@ -8,6 +8,8 @@ import org.apache.commons.logging.LogFactory;
 
 import org.openjena.atlas.lib.NotImplemented;
 
+import uk.ac.ox.zoo.sparqlite.cmd.support.EmptyReader;
+
 import com.hp.hpl.jena.datatypes.*;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.impl.LiteralLabel;
@@ -104,7 +106,6 @@ public class genericIndex extends PropertyFunctionEval
             }
         }
     
-    
     private class GenericIndexIterator
         {
         protected final Binding binding;
@@ -198,7 +199,7 @@ public class genericIndex extends PropertyFunctionEval
             if (!hasNext()) throw new NoSuchElementException();
             int i = 0;
             String [] elements = current.split( "," );
-            Binding b = new Binding0();
+            Binding b = binding;
             for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
             readAndCloseIfDone();
             return b;
@@ -235,14 +236,5 @@ public class genericIndex extends PropertyFunctionEval
             ////TODO: remove? System.err.println( ">> gi: returning " + b );
             return b;
             }
-        }
-
-    static class EmptyReader extends Reader
-        {
-        @Override public int read( char[] cbuf, int off, int len ) 
-            { return -1; }
-
-        @Override public void close() throws IOException
-            {}
         }   
     }
