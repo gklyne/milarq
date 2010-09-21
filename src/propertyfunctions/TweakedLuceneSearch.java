@@ -2,6 +2,8 @@ package propertyfunctions;
 
 import java.util.Iterator;
 
+import org.openjena.atlas.iterator.IteratorTruncate;
+
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.Query;
@@ -16,7 +18,6 @@ import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import com.hp.hpl.jena.sparql.engine.iterator.*;
 import com.hp.hpl.jena.sparql.expr.ExprEvalException;
 import com.hp.hpl.jena.sparql.expr.NodeValue;
-import com.hp.hpl.jena.sparql.lib.iterator.IteratorTruncate;
 import com.hp.hpl.jena.sparql.pfunction.*;
 import com.hp.hpl.jena.sparql.util.ALog;
 import com.hp.hpl.jena.sparql.util.IterLib;

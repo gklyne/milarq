@@ -9,6 +9,8 @@ import uk.ac.ox.zoo.sparqlite.*;
 import uk.ac.ox.zoo.sparqlite.exceptions.EndpointNotFoundException;
 import uk.ac.ox.zoo.sparqlite.exceptions.UnexpectedException;
 
+import org.openjena.atlas.lib.StrUtils;
+
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -325,7 +327,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			filePath = "webapp/WEB-INF/tdb/rowling-larq.ttl"; // jena assembler store description for TDB store
 			endpoint = Utilities.createEndpointTDB( filePath );
 			
-			queryString = StringUtils.join("\n", new String[] {
+			queryString = StrUtils.strjoin("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
 					"ASK { ?lit pf:textMatch 'potter' }"
 			});
@@ -355,7 +357,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			filePath = "webapp/WEB-INF/tdb/allbooks-larq.ttl"; // jena assembler store description for TDB store
 			endpoint = Utilities.createEndpointTDB( filePath );
 			
-			queryString = StringUtils.join("\n", new String[] {
+			queryString = StrUtils.strjoin("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
 					"ASK { GRAPH <http://example.org/rowling> { ?lit pf:textMatch 'potter' } }"
 			});
@@ -365,7 +367,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			
 			assertTrue(execution.execAsk());
 			
-			queryString = StringUtils.join("\n", new String[] {
+			queryString = StrUtils.strjoin("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
 					"ASK { GRAPH <http://example.org/tolkien> { ?lit pf:textMatch 'hobbit' } }"
 			});
@@ -395,7 +397,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			filePath = "webapp/WEB-INF/tdb/allbooks-mixed-larq.ttl"; // jena assembler store description for TDB store
 			endpoint = Utilities.createEndpointTDB( filePath );
 			
-			queryString = StringUtils.join("\n", new String[] {
+			queryString = StrUtils.strjoin("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
 					"ASK { GRAPH <http://example.org/rowling> { ?lit pf:textMatch 'potter' } }"
 			});
@@ -405,7 +407,7 @@ public class EndpointTDBLARQTest extends TestCase {
 			
 			assertTrue(execution.execAsk());
 			
-			queryString = StringUtils.join("\n", new String[] {
+			queryString = StrUtils.strjoin("\n", new String[] {
 					"PREFIX pf: <http://jena.hpl.hp.com/ARQ/property#>",
 					"ASK { GRAPH <http://example.org/tolkien> { ?lit pf:textMatch 'hobbit' } }"
 			});

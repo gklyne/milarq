@@ -1,7 +1,7 @@
 package propertyfunctions;
 
 import com.hp.hpl.jena.query.larq.HitLARQ;
-import com.hp.hpl.jena.sparql.lib.iterator.IteratorTruncate ;
+import org.openjena.atlas.iterator.IteratorTruncate ;
 
 public class ScoreTest implements IteratorTruncate.Test
 	{

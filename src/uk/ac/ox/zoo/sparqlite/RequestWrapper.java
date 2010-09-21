@@ -24,6 +24,7 @@ public class RequestWrapper {
 	
 	public static final String QUERYSYNTAX = "sparqlite.processor.QuerySyntax";
 	static final String SYNTAXARQ = "ARQ";
+	static final String SYNTAXSPARQL1_11 = "SPARQL_1.1";
 
 	public RequestWrapper(String method, RequestHeaders headers, RequestParams params, InitParams initParams) 
 	throws UnexpectedException, MalformedRequestException, NotImplementedException {
@@ -73,6 +74,10 @@ public class RequestWrapper {
 				if (syntaxString.equals(SYNTAXARQ)) {
 					syntax = Syntax.syntaxARQ;
 					log.trace("using ARQ syntax");
+				}
+				if (syntaxString.equals(SYNTAXSPARQL1_11)) {
+					syntax = Syntax.syntaxSPARQL_11;
+					log.trace("using SPARQL 1.1 syntax");
 				}
 			}
 		}

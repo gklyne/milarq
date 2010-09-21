@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.openjena.atlas.lib.NotImplemented;
+import org.openjena.atlas.io.IndentedWriter;
 
 import uk.ac.ox.zoo.sparqlite.cmd.support.EmptyReader;
 
@@ -25,7 +26,6 @@ import com.hp.hpl.jena.sparql.pfunction.PropFuncArg;
 import com.hp.hpl.jena.sparql.pfunction.PropFuncArgType;
 import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionEval;
 import com.hp.hpl.jena.sparql.serializer.SerializationContext;
-import com.hp.hpl.jena.sparql.util.IndentedWriter;
 import com.hp.hpl.jena.sparql.util.Symbol;
 
 public class genericIndex extends PropertyFunctionEval
