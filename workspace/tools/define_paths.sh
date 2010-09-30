@@ -56,6 +56,14 @@ JAVA="$JAVA_BIN -Xmx1024M -server -cp $CP"
 
 # echo "The script you are running has basename `basename $0`, dirname `dirname $0`"
 
+# From http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
+function real_path ()
+    {
+    python -c 'import os,sys;print os.path.realpath(sys.argv[1])' $1
+    }
+
+which realpath || alias realpath='real_path'
+
 function classpath()
     {
     echo "$CP"
