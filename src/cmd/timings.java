@@ -60,7 +60,7 @@ public class timings
         {
         Query query = QueryFactory.create( queryString, Syntax.syntaxARQ );
         QueryExecution qexec = QueryExecutionFactory.create( query, m );
-        if (c.log) qexec.getContext().set( TDB.symLogExec, true );
+        if (c.log) qexec.getContext().set( ARQ.symLogExec, true );
         if (c.larqIndex != null) LARQ.setDefaultIndex(qexec.getContext(), new IndexLARQ(LARQHelp.getReader(c.larqIndex)));
         try 
             {

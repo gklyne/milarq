@@ -1,5 +1,7 @@
 package propertyfunctions;
 
+import static propertyfunctions.compositeIndex.bb;
+
 import java.io.*;
 import java.util.*;
 
@@ -200,7 +202,7 @@ public class genericIndex extends PropertyFunctionEval
             int i = 1;
             String [] elements = current.split( "," );
             Binding b = binding;
-            for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
+            for (Var v: vars) b = compositeIndex.bb( b, v, stringToNode( elements[i++] ) );
             readAndCloseIfDone();
             return b;
             }
@@ -229,8 +231,8 @@ public class genericIndex extends PropertyFunctionEval
             String [] elements = current.split( "," );
             Node S = stringToNode( elements[i++] );
             final Var VS = Var.alloc(subject); 
-            Binding b = new Binding1( binding, VS, S );
-            for (Var v: vars) b = new Binding1( b, v, stringToNode( elements[i++] ) );
+            Binding b = bb( binding, VS, S );
+            for (Var v: vars) b = bb( b, v, stringToNode( elements[i++] ) );
             current = readLine( in );
             if (current == null) close();
             ////TODO: remove? System.err.println( ">> gi: returning " + b );
