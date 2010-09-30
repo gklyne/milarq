@@ -1,5 +1,7 @@
 package propertyfunctions;
 
+import static propertyfunctions.compositeIndex.bb;
+
 import java.io.*;
 import java.util.*;
 
@@ -137,7 +139,7 @@ public class multipleIndex extends PropertyFunctionEval
                 int ln = Integer.parseInt( x.get( "latest" ) );
                 Node E = Node.createLiteral( LiteralLabelFactory.create( en ) );
                 Node L = Node.createLiteral( LiteralLabelFactory.create( ln ) );
-                Binding1 result = new Binding1( new Binding1( new Binding1( binding, VE, E ), VS, S ), VL, L );
+                Binding result = bb( bb( bb( binding, VE, E ), VS, S ), VL, L );
                 return result;
                 }
 

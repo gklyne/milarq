@@ -16,6 +16,7 @@ import com.hp.hpl.jena.sparql.engine.ExecutionContext;
 import com.hp.hpl.jena.sparql.engine.QueryIterator;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.Binding1;
+import com.hp.hpl.jena.sparql.engine.binding.BindingFactory;
 import com.hp.hpl.jena.sparql.pfunction.PropFuncArg;
 import com.hp.hpl.jena.sparql.pfunction.PropFuncArgType;
 import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionEval;
@@ -108,10 +109,10 @@ public class compositeIndex extends PropertyFunctionEval
 				Node S = Node.createURI( x.subjectURI );
 				Node NB = Node.createLiteral( LiteralLabelFactory.create( x.notBefore ) );
                 Node NA = Node.createLiteral( LiteralLabelFactory.create( x.notAfter ) );
-				Binding1 result = new Binding1( new Binding1( new Binding1( binding, VB, NB ), VS, S ), VA, NA );
+				Binding result = bb( bb( bb( binding, VB, NB ), VS, S ), VA, NA );
                 return result;
 				}
-
+			
 			@Override public void remove() 
 				{
 				throw new NotImplemented( "oops" );
@@ -134,6 +135,12 @@ public class compositeIndex extends PropertyFunctionEval
 				}
 			};
 		}
+
+
+	public static Binding bb(Binding binding, Var vb, Node nb) {
+		// TODO Auto-generated method stub
+		return BindingFactory.binding(binding, vb, nb);
+	}
 
 	private void loadIndexIfNecessary() 
 		{

@@ -3,23 +3,29 @@ package propertyfunctions;
 import java.util.Iterator;
 
 import org.openjena.atlas.iterator.IteratorTruncate;
+import org.openjena.atlas.logging.Log;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.graph.*;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryBuildException;
 import com.hp.hpl.jena.query.QueryExecException;
 import com.hp.hpl.jena.query.larq.HitLARQ;
 import com.hp.hpl.jena.query.larq.IndexLARQ;
 import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.engine.*;
+import com.hp.hpl.jena.sparql.engine.ExecutionContext;
+import com.hp.hpl.jena.sparql.engine.QueryIterator;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
-import com.hp.hpl.jena.sparql.engine.iterator.*;
+import com.hp.hpl.jena.sparql.engine.iterator.QueryIterNullIterator;
+import com.hp.hpl.jena.sparql.engine.iterator.QueryIterPlainWrapper;
+import com.hp.hpl.jena.sparql.engine.iterator.QueryIterSingleton;
+import com.hp.hpl.jena.sparql.engine.iterator.QueryIterSlice;
 import com.hp.hpl.jena.sparql.expr.ExprEvalException;
 import com.hp.hpl.jena.sparql.expr.NodeValue;
-import com.hp.hpl.jena.sparql.pfunction.*;
-import com.hp.hpl.jena.sparql.util.ALog;
+import com.hp.hpl.jena.sparql.pfunction.PropFuncArg;
+import com.hp.hpl.jena.sparql.pfunction.PropFuncArgType;
+import com.hp.hpl.jena.sparql.pfunction.PropertyFunctionEval;
 import com.hp.hpl.jena.sparql.util.IterLib;
 import com.hp.hpl.jena.sparql.util.NodeFactory;
 import com.hp.hpl.jena.util.iterator.Map1;
@@ -56,7 +62,7 @@ public abstract class TweakedLuceneSearch extends PropertyFunctionEval
      		return execEvaluatedProtected(binding, argSubject, predicate,  argObject,  execCxt) ;
      	} catch (RuntimeException ex)
      	{
-     		ALog.fatal(this, "Exception from Lucene search", ex) ;
+     		Log.fatal(this, "Exception from Lucene search", ex) ;
      		throw ex ;
      	}
      }
@@ -176,7 +182,7 @@ public abstract class TweakedLuceneSearch extends PropertyFunctionEval
          
          if ( qs == null )
          {
-             ALog.warn(this, "Not a string (it was a moment ago!): "+searchString) ;
+             Log.warn(this, "Not a string (it was a moment ago!): "+searchString) ;
              return new QueryIterNullIterator(execCxt) ;
          }
          
@@ -198,19 +204,19 @@ public abstract class TweakedLuceneSearch extends PropertyFunctionEval
      {
          if ( !searchString.isLiteral() )
          {
-             ALog.warn(TweakedLuceneSearch.class, "Not a string: "+searchString) ;
+             Log.warn(TweakedLuceneSearch.class, "Not a string: "+searchString) ;
              return false ;
          }
 
          if ( searchString.getLiteralDatatypeURI() != null )
          {
-             ALog.warn(TweakedLuceneSearch.class, "Not a plain string: "+searchString) ;
+             Log.warn(TweakedLuceneSearch.class, "Not a plain string: "+searchString) ;
              return false ;
          }
 
          if ( searchString.getLiteralLanguage() != null && ! searchString.getLiteralLanguage().equals("") )
          {
-             ALog.warn(TweakedLuceneSearch.class, "Not a plain string (has lang tag): "+searchString) ;
+             Log.warn(TweakedLuceneSearch.class, "Not a plain string (has lang tag): "+searchString) ;
              return false ;
          }
          return true ;
