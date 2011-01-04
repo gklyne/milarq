@@ -1,6 +1,19 @@
 Notes for using MILARQ
 ======================
 
+This file available at: http://code.google.com/p/milarq/source/browse/README.text
+
+See also documents in the MILARQ project wiki:
+- http://code.google.com/p/milarq/wiki/ServerConfiguration
+- http://code.google.com/p/milarq/wiki/CLAROS_server_setup_notes 
+  (specific to CLAROS, but information may be helpful for other projects)
+
+The MILARQ project includes copies of the relevant Jena/ARQ/TDB ARQ library
+files in the webapp/WEB-INF/lib directory.  It does not work with older 
+versions, and probably does not work yet with newer versions.
+
+See: http://code.google.com/p/milarq/source/browse/#hg%2Fwebapp%2FWEB-INF%2Flib
+
 Preparing composite indexes
 ---------------------------
 
