@@ -14,6 +14,20 @@ versions, and probably does not work yet with newer versions.
 
 See: http://code.google.com/p/milarq/source/browse/#hg%2Fwebapp%2FWEB-INF%2Flib
 
+TDB and ARQ command line tools
+------------------------------
+
+The command line utilities used for loading and querying a TDB database are in
+the Jena library .jar files, in directory webapp/WEB-INF/lib. Project file
+workspace/tools/define_paths.sh contains a shell script that sets up the Java 
+environment and defines commands to run these utilities.
+
+Logging output from the command line utilities is controlled by 
+webapp/WEB-INF/classes/log4j.properties. [[@@I think - need to confirm this]]
+
+For details about how to use the standard ARQ and TDB command line tools, 
+see: http://jena.sourceforge.net/tools.html
+
 Preparing composite indexes
 ---------------------------
 
