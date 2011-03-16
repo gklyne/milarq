@@ -6,7 +6,6 @@ import com.hp.hpl.jena.assembler.Assembler;
 import com.hp.hpl.jena.assembler.AssemblerHelp;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class ConfigByFile extends Config
@@ -33,6 +32,7 @@ public class ConfigByFile extends Config
         {
         Resource root = getDescriptionRoot();
         return (Dataset) Assembler.general.open( root );
+
         }
 
     private Resource getDescriptionRoot()
@@ -49,7 +49,7 @@ public class ConfigByFile extends Config
             {
             String sd = this.getStoreName();
             log.trace( "loading description model from " + sd );
-            description = FileManager.get().loadModel( sd );
+            description = AssemblerModelLoader.get(sd);
             description.add( Vocab.TDB_Dataset, RDFS.subClassOf, Vocab.RDF_Dataset );            
             }
         return description;
