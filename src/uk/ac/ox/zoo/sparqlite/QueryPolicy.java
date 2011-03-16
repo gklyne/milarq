@@ -229,6 +229,8 @@ public class QueryPolicy {
         @Override public void visit( ElementMinus arg0 )
             { log.trace("ElementExists: "+arg0.toString());}
 
+        public void visit( ElementBind arg0 ) {}
+
 	}
 
 	public void applyFilterPolicy(Query query) throws QueryPolicyException {
@@ -327,6 +329,8 @@ public class QueryPolicy {
 
         @Override public void visit( ElementMinus arg0 )
             {log.trace("ElementMinus: "+arg0.toString());}
+
+        public void visit( ElementBind  arg0 ) {}
 
 	}
 
