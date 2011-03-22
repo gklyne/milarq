@@ -46,6 +46,7 @@ public class AssemblerModelLoader {
 		Property[] locations = {
 				model.createProperty("http://jena.hpl.hp.com/2008/tdb#location"),
 				model.createProperty("http://purl.org/net/sparqlite/vocab#larqLocation"),
+				model.createProperty("http://purl.org/net/sparqlite/vocab#useDirectory"),
 		};
 		
 		for (Property location : locations) {
